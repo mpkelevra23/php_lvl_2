@@ -1,0 +1,5 @@
+*.[g]
+logs
+.idea
+app/web/img
+app/web/thumb
