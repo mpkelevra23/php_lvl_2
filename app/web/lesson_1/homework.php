@@ -72,7 +72,7 @@ class Game
         $this->description = $description;
     }
 
-    function view()
+    public function view()
     {
         echo "<h1>$this->name</h1><p>$this->type</p><p>$this->price</p>";
     }
@@ -113,12 +113,12 @@ class ComputerGame extends Game
         $this->age = $age;
     }
 
-    function view()
+    public function view()
     {
         echo "<h1>" . parent::getName() . "</h1>" . "<p>" . parent::getType() . "<p>" . "<p>" . $this->requirements . "<p>";
     }
 
-    function save()
+    public function save()
     {
         $id = $this->getId();
         $name = $this->getName();
@@ -130,7 +130,6 @@ class ComputerGame extends Game
 VALUES ('$id', '$name', '$type', '$price', '$description', '$this->requirements', '$this->age')");
     }
 }
-
 
 $b = new ComputerGame('2', 'Civilization', 'Стратегия', '999 руб', 'Изначально созданная легендарным дизайнером Сидом Мейером, Civilization представляет собой пошаговую стратегию, в которой игроку предлагается построить империю, способную выдержать испытание временем.', 'intel Core i3 2.5 Ghz or AMD Phenom II 2.6 Ghz or greater, 4 GB ОЗУ, 1 GB & AMD 5570 or nVidia 450', '12+');
 $b->view();
