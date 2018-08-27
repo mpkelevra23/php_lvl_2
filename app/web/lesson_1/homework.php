@@ -3,16 +3,67 @@
  * Date: 8/22/18
  * Time: 12:52 PM
  */
+
 //Задания 1-4
 class Game
 {
-    protected $id;
-    protected $name;
-    protected $type;
-    protected $price;
-    protected $description;
+    private $id;
+    private $name;
+    private $type;
+    private $price;
+    private $description;
 
-    function __construct($id, $name, $type, $price, $description)
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function __construct($id, $name, $type, $price, $description)
     {
         $this->id = $id;
         $this->name = $name;
@@ -21,40 +72,66 @@ class Game
         $this->description = $description;
     }
 
-    function view()
+    public function view()
     {
         echo "<h1>$this->name</h1><p>$this->type</p><p>$this->price</p>";
     }
 }
 
+$a = new Game('1', 'Дурак', 'Настольная игра', '100 руб.', 'Классическая русская карточная игра');
+$a->view();
+
 class ComputerGame extends Game
 {
-    protected $requirements;
-    protected $age;
+    private $requirements;
+    private $age;
 
-    function __construct($id, $name, $type, $price, $description, $requirements, $age)
+    public function getAge()
+    {
+        return $this->age;
+    }
+
+    public function getRequirements()
+    {
+        return $this->requirements;
+    }
+
+    public function setAge($age)
+    {
+        $this->age = $age;
+    }
+
+    public function setRequirements($requirements)
+    {
+        $this->requirements = $requirements;
+    }
+
+    public function __construct($id, $name, $type, $price, $description, $requirements, $age)
     {
         parent::__construct($id, $name, $type, $price, $description);
         $this->requirements = $requirements;
         $this->age = $age;
     }
 
-    function view()
+    public function view()
     {
-        echo "<h1>$this->name</h1><p>$this->type</p><p>$this->price</p><p>$this->requirements</p>";
+        echo "<h1>" . parent::getName() . "</h1>" . "<p>" . parent::getType() . "<p>" . "<p>" . $this->requirements . "<p>";
     }
 
-    function save()
+    public function save()
     {
+        $id = $this->getId();
+        $name = $this->getName();
+        $type = $this->getType();
+        $price = $this->getPrice();
+        $description = $this->getDescription();
         $mysqli = new mysqli("localhost", "admin", "12345", "shop");
         $mysqli->query("INSERT INTO `PCGames`(`id`, `name`, `type`, `price`, `description`, `requirements`, `age`)
-VALUES ('$this->id', '$this->name', '$this->type', '$this->price', '$this->description', '$this->requirements', '$this->age')");
+VALUES ('$id', '$name', '$type', '$price', '$description', '$this->requirements', '$this->age')");
     }
 }
 
-$a = new Game('1', 'Дурак', 'Настольная игра', '100 руб.', 'Классическая русская карточная игра');
-$a->view();
-$b = new ComputerGame('1', 'Civilization', 'Стратегия', '999 руб', 'Изначально созданная легендарным дизайнером Сидом Мейером, Civilization представляет собой пошаговую стратегию, в которой игроку предлагается построить империю, способную выдержать испытание временем.', 'intel Core i3 2.5 Ghz or AMD Phenom II 2.6 Ghz or greater, 4 GB ОЗУ, 1 GB & AMD 5570 or nVidia 450', '12+');
+$b = new ComputerGame('2', 'Civilization', 'Стратегия', '999 руб', 'Изначально созданная легендарным дизайнером Сидом Мейером, Civilization представляет собой пошаговую стратегию, в которой игроку предлагается построить империю, способную выдержать испытание временем.', 'intel Core i3 2.5 Ghz or AMD Phenom II 2.6 Ghz or greater, 4 GB ОЗУ, 1 GB & AMD 5570 or nVidia 450', '12+');
 $b->view();
 
 //Задание 5
