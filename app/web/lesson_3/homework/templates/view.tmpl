@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Каталог</title>
+</head>
+<body>
+<div class="content">
+    <h2>Галерея</h2>
+    <div class="pictures">
+        {% for d in data %}
+            <a target='_blank' href='backend/image.php?photo={{ d.id|escape }}'> <img
+                        src='backend/{{ d.thumb_adress|escape }}'></a>
+        {% endfor %}
+    </div>
+    <div class="load">
+        <form enctype="multipart/form-data" method="post" action="backend/save.php">
+            <h3>Загрузка изображения:</h3>
+            <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
+            <input type="file" name="photo">
+            <input type="submit" value="Отправить" name="send">
+        </form>
+    </div>
+</div>
+</body>
+</html>
