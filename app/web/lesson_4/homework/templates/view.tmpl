@@ -4,6 +4,7 @@
     <link rel="stylesheet" type="text/css" href="../homework/css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
     <meta charset="UTF-8">
+    <script src="../homework/script/jquery-3.3.1.min.js"></script>
     <title>Каталог</title>
 </head>
 <body>
@@ -15,6 +16,21 @@
                         src='backend/{{ d.thumb_adress|escape }}'></a>
         {% endfor %}
     </div>
+
+    <button id="more">MORE!!!</button>
+
+    <script>
+        $(document).ready(function () {
+            var i = 1;
+            $("#more").click(function () {
+                i++;
+                $.post("index.php", {more: i}, function (data) {
+                    $(".pictures").html(data);
+                });
+                return false;
+            })
+        })
+    </script>
     <div class="load">
         <form enctype="multipart/form-data" method="post" action="backend/save.php">
             <h3>Загрузка изображения:</h3>
