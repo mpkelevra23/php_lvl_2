@@ -70,3 +70,19 @@ class MathOperations
 echo MathOperations::RangeLength(10) . "<br>";
 echo MathOperations::count(-12) . "<br>";
 echo MathOperations::PI . "<br>";
+
+Class Man
+{
+    private $username;
+    public static $numMan = 0;
+
+    public function __construct($username)
+    {
+        $this->username = $username;
+        self::$numMan++;
+    }
+}
+
+echo Man::$numMan . '<br>';
+$m = new Man('Maks');
+echo Man::$numMan . '<br>';
