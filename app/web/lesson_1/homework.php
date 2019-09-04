@@ -7,11 +7,20 @@
 //Задания 1-4
 class Game
 {
-    private $id;
-    private $name;
-    private $type;
-    private $price;
-    private $description;
+    protected $id;
+    protected $name;
+    protected $type;
+    protected $price;
+    protected $description;
+
+    public function __construct($id, $name, $type, $price, $description)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->type = $type;
+        $this->price = $price;
+        $this->description = $description;
+    }
 
     public function getId()
     {
@@ -63,15 +72,6 @@ class Game
         $this->description = $description;
     }
 
-    public function __construct($id, $name, $type, $price, $description)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->type = $type;
-        $this->price = $price;
-        $this->description = $description;
-    }
-
     public function view()
     {
         echo "<h1>$this->name</h1><p>$this->type</p><p>$this->price</p>";
@@ -85,6 +85,13 @@ class ComputerGame extends Game
 {
     private $requirements;
     private $age;
+
+    public function __construct($id, $name, $type, $price, $description, $requirements, $age)
+    {
+        parent::__construct($id, $name, $type, $price, $description);
+        $this->requirements = $requirements;
+        $this->age = $age;
+    }
 
     public function getAge()
     {
@@ -106,16 +113,9 @@ class ComputerGame extends Game
         $this->requirements = $requirements;
     }
 
-    public function __construct($id, $name, $type, $price, $description, $requirements, $age)
-    {
-        parent::__construct($id, $name, $type, $price, $description);
-        $this->requirements = $requirements;
-        $this->age = $age;
-    }
-
     public function view()
     {
-        echo "<h1>" . parent::getName() . "</h1>" . "<p>" . parent::getType() . "<p>" . "<p>" . $this->requirements . "<p>";
+        echo "<h1>" . $this->name . "</h1>" . "<p>" . $this->type . "<p>" . "<p>" . $this->requirements . "<p>";
     }
 
     public function save()
@@ -146,8 +146,8 @@ $b->view();
 //
 //$a1 = new A(); //создаст экземпляр класса A и присваивает его переменной $a1
 //$a2 = new A(); //создаст экземпляр класса A и присваивает его переменной $a2
-//$a1->foo(); //вызовет метод объекта A foo() который проинкрементирует $x и выведет 1
-//$a2->foo(); //т. к. статические методы и свойства принадлежат классу а не объекту, то в переменной x сохраниться результат предыдущего вызова метода и сохраниться 1, следовательно, он снова увеличит переменную на 1 и выведет 2
+//$a1->foo(); //вызовет метод foo() класса A который инкрементирует статическую переменную $x, выводит 1 и сохраняет данное значение для класса A и всех объектов данного класса
+//$a2->foo(); //т. к. статические методы и свойства принадлежат классу а не объекту, то в статической переменной x сохраниться результат предыдущего вызова метода foo() и сохраниться 1, следовательно, он снова увеличит статическую переменную $x на 1 и выведет 2
 //$a1->foo(); //увеличит переменную x на 1 и выведет 3
 //$a2->foo(); //увеличит переменную x на 1 и выведет 4
 //
@@ -167,10 +167,10 @@ $b->view();
 //
 //$a1 = new A(); //создаст экземпляр класса A и присваивает его переменной $a1
 //$b1 = new B(); //создаст экземпляр класса B и присваивает его переменной $b1
-//$a1->foo(); //вызовет метод объекта A foo() который проинкрементирует $x и выведет 1
-//$b1->foo(); //вызовет метод объекта B foo() который проинкрементирует $x и выведет 1
-//$a1->foo(); //увеличит переменную x объекта A на 1 и выведет 2
-//$b1->foo(); //увеличит переменную x объекта B на 1 и выведет 2
+//$a1->foo(); //вызовет метод foo() класса A который инкрементирует статическую переменную $x, выводит 1 и сохраняет данное значение для класса A и всех объектов данного класса
+//$b1->foo(); //вызовет метод foo() класса B который инкрементирует статическую переменную $x, выводит 1 и сохраняет данное значение для класса B и всех объектов данного класса
+//$a1->foo(); //увеличит переменную x класса A на 1 и выведет 2
+//$b1->foo(); //увеличит переменную x класса B на 1 и выведет 2
 //
 //Задание 7
 //class A
@@ -188,7 +188,7 @@ $b->view();
 //
 //$a1 = new A; //так как объект не имеет свойств и мы не передаём никаких параметров то при инициализации можно не указывать скобки создаст экземпляр класса A и присваивает его переменной $a1
 //$b1 = new B; //создаст экземпляр класса B и присваивает его переменной $b1
-//$a1->foo(); //вызовет метод объекта A foo() который проинкрементирует $x и выведет 1
-//$b1->foo(); //вызовет метод объекта B foo() который проинкрементирует $x и выведет 1
-//$a1->foo(); //увеличит переменную x объекта A на 1 и выведет 2
-//$b1->foo(); //увеличит переменную x объекта B на 1 и выведет 2
+//$a1->foo(); //вызовет метод foo() класса A который инкрементирует статическую переменную $x, выводит 1 и сохраняет данное значение для класса A и всех объектов данного класса
+//$b1->foo(); //вызовет метод foo() класса B который инкрементирует статическую переменную $x, выводит 1 и сохраняет данное значение для класса B и всех объектов данного класса
+//$a1->foo(); //увеличит переменную x класса A на 1 и выведет 2
+//$b1->foo(); //увеличит переменную x класса B на 1 и выведет 2
