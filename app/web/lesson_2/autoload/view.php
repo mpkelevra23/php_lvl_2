@@ -6,12 +6,13 @@
  * Time: 1:45 PM
  */
 
-function __autoload($classname) {
+function __autoload($classname)
+{
     include $classname . '.php';
 }
 
-$mam = new A("Я объект класса A");
-$mam->view();
+$obj_1 = new A("Я объект класса A");
+$obj_1->view();
 
-$lol = new B("Я объект класса B");
-$lol->view();
+$obj_2 = new B("Я объект класса B");
+$obj_2->view();

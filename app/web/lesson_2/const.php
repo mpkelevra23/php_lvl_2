@@ -22,6 +22,6 @@ $classname = "MyClass";
 echo $classname::CONSTANT . "\n";
 
 $class = new MyClass();
-$class ->showConstant();
+$class->showConstant();
 
 echo $class::CONSTANT . "\n";

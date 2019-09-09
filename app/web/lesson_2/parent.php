@@ -19,7 +19,7 @@ class SubClass extends BaseClass
     function __construct()
     {
         parent::__construct();
-        echo "Конструктор класса SubClass\n";
+        echo "Конструктор класса SubClass\n ";
     }
 }
 

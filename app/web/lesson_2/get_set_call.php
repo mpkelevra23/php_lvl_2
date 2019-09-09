@@ -29,7 +29,6 @@ class Main
     {
         var_dump($name, $value);
         var_dump($this->name = $value);
-
     }
 
     public function __call($name, $arguments)
@@ -38,31 +37,32 @@ class Main
     }
 }
 
-$lol = new Main("check");
-echo $lol->b;
-$lol->view();
-$lol->a = 'lol';
-$lol->view();
-$lol->f(1, 2, 3);
+$main = new Main("check");
+echo $main->b;
+$main->view();
+$main->a = 'main';
+$main->view();
+$main->f(1, 2, 3);
 
 echo '<hr>';
 
 class MyClass
 {
     public $c = "c value" . '<br>';
+
     public function __set($name, $value)
     {
-        return "__set, property - {$name} is not exist" . '<br>';
+        echo "__set, property - $name is not exist" . '<br>';
     }
 
     public function __get($name)
     {
-        return "__get, property - {$name} is not exist" . '<br>';
+        return "__get, property - $name is not exist" . '<br>';
     }
 
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
-        return "__call, method - {$name} is not exist" . '<br>';
+        return "__call, method - $name is not exist" . '<br>';
     }
 
     public function getId()
@@ -72,8 +72,8 @@ class MyClass
 }
 
 $obj = new MyClass();
-echo $obj->z = 1; //Запись в свойство (свойство не существует)
+$obj->z = 1; //Запись в свойство (свойство не существует)
 echo $obj->b; //Получаем значение свойства (свойство не существует)
 echo $obj->c; //Получаем значение свойства (свойство существует)
-echo $obj->getName(); //Вызов метода (метод не существует)
+echo $obj->getName('string', 1); //Вызов метода (метод не существует)
 echo $obj->getId(); //Вызов метода (метод существует)

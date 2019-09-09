@@ -33,3 +33,5 @@ $names = [
 ];
 
 echo $obj->names($names);
+
+$obj->otherClassTypeFunc($obj);//Получим ошибку
