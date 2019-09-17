@@ -9,5 +9,5 @@ $products[] = new PhysicalProduct('Физический товар', 7);
 $products[] = new WeightProduct('Весовой товар', 10, 15);
 
 foreach ($products as $product) {
-    echo $product->getName() . ' имеет окончательную стоймость ' . $product->getTotalPrice() . ' и доход в размере ' . $product->getProfit() . '<br>';
+    echo $product->getName() . ' имеет окончательную стоймость ' . $product->getTotalPrice() . ' руб. и доход в размере ' . $product->getProfit() . ' руб.<br>';
 }

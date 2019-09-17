@@ -7,9 +7,7 @@
 <body>
 <a href='../index.php'> Вернуться в галерею </a>
 <div>
-    {% for d in data %}
-        <img src='{{ d.adress|escape }}'>
-    {% endfor %}
+        <img src='../{{ adress|escape }}'>
 </div>
 </body>
 </html>
