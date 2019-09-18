@@ -8,20 +8,20 @@ abstract class Product
 
     public function __construct(string $name, int $amount = 1)
     {
-        $this->name = $name;
-        $this->amount = $amount;
+        self::setName($name);
+        self::setAmount($amount);
     }
 
-    abstract public function getTotalPrice();
+    abstract public function getTotalPrice(): int;
 
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(string $name): string
     {
-        $this->name = $name;
+        return $this->name = $name;
     }
 
     public function getAmount(): int
@@ -29,13 +29,13 @@ abstract class Product
         return $this->amount;
     }
 
-    public function setAmount(int $amount): void
+    public function setAmount(int $amount): int
     {
-        $this->amount = $amount;
+        return $this->amount = $amount;
     }
 
-    public function getProfit()
+    public function getProfit(): int
     {
-        return $this->getTotalPrice() * self::INCOME / 100;
+        return static::getTotalPrice() * self::INCOME / 100;
     }
 }

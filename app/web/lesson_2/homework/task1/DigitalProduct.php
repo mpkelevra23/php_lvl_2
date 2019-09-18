@@ -10,8 +10,8 @@ class DigitalProduct extends Product
         parent::__construct($name, $amount);
     }
 
-    public function getTotalPrice()
+    public function getTotalPrice(): int
     {
-        return self::PRICE * $this->amount;
+        return self::PRICE * self::getAmount();
     }
 }

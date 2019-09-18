@@ -10,9 +10,9 @@ class WeightProduct extends PhysicalProduct
         self::setWeight($weight);
     }
 
-    public function setWeight(int $weight): void
+    public function setWeight(int $weight): int
     {
-        $this->weight = $weight;
+        return $this->weight = $weight;
     }
 
     public function getWeight(): int
@@ -20,9 +20,8 @@ class WeightProduct extends PhysicalProduct
         return $this->weight;
     }
 
-    public function getTotalPrice()
+    public function getTotalPrice(): int
     {
-        return parent::getTotalPrice() * $this->getWeight();
+        return parent::getTotalPrice() * self::getWeight();
     }
-
 }

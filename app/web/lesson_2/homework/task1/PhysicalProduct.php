@@ -9,7 +9,7 @@ class PhysicalProduct extends DigitalProduct
         parent::__construct($name, $amount);
     }
 
-    public function getTotalPrice()
+    public function getTotalPrice(): int
     {
         return parent::getTotalPrice() * 2;
     }
