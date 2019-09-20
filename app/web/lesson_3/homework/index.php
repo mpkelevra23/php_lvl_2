@@ -1,34 +1,16 @@
 <?php
 
-include 'backend/config.php';
+include_once 'models/Picture.php';
 
-include 'Twig/Autoloader.php';
+include_once 'Twig/Autoloader.php';
 
-$data = [
-    [
-        'id' => 1,
-        'adress' => 'data/img/blade_runner_2049.jpg',
-        'thumb_adress' => 'data/thumb/blade_runner_2049.jpg',
-    ],
-];
 Twig_Autoloader::register();
 
-//try {
-//    $dbh = new PDO($dsn, $dbUser, $dbPass);
-//} catch (PDOException $e) {
-//    echo "Error: Could not connect. " . $e->getMessage();
-//}
-//
-//$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//
-//try {
-//    $sql = "SELECT `id`, `thumb_adress` FROM `pictures` ORDER BY `view_count` DESC ";
-//    $sth = $dbh->query($sql);
-//    while ($row = $sth->fetchObject()) {
-//        $data[] = $row;
-//    }
-//
-//    unset($dbh);
+if (!empty($_FILES) && is_uploaded_file($_FILES['picture']['tmp_name'])) {
+    $message = Picture::save();
+} else $message = 'Выберите файл для загрузки';
+
+$pictures = Picture::getPictures();
 
 try {
     $loader = new Twig_Loader_Filesystem('templates');
@@ -38,7 +20,8 @@ try {
     $template = $twig->loadTemplate('view.tmpl');
 
     echo $template->render(array(
-        'data' => $data,
+        'pictures' => $pictures,
+        'message' => $message,
     ));
 
 } catch (Exception $e) {

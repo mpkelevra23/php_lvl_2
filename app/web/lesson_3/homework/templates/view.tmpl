@@ -10,12 +10,18 @@
 <div class="content">
     <h2>Галерея</h2>
     <div class="pictures">
-        {% for d in data %}
-        <form action="backend/image.php" method="post" name="adress">
-            <input type="hidden" value="{{ d.adress|escape }}">
-            <a target='_blank'> <img src='{{ d.thumb_adress|escape }}'></a>
+          {% for picture in pictures %}
+          <a href='image.php?photo={{ picture.id }}'> <img src={{ picture.thumb_address }}></a>
+          {% endfor %}
+    </div>
+    <div class="load">
+        <form enctype="multipart/form-data" method="post" action="">
+            <h3>Загрузка изображения:</h3>
+            <input type="hidden" name="MAX_FILE_SIZE" value="10000000">
+            <input type="file" name="picture">
+            <input type="submit" value="Отправить" name="send">
+            <p>{{ message }}</p>
         </form>
-        {% endfor %}
     </div>
 </div>
 </body>
