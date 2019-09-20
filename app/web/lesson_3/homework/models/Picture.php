@@ -10,6 +10,7 @@ include_once 'Transfer.php';
 class Picture
 {
     /**
+     * TODO переделать логику метода, изменить возвращаемое значение
      * Сохраняем изображение
      * @return string
      */
@@ -42,8 +43,6 @@ class Picture
                 $db->query("INSERT INTO `pictures` (`name`, address, thumb_address, `size`) VALUES ('$file', '$address', '$thumbAddress', '$size')");
                 // Закрываем соединение с БД
                 Db::closeConnection($db);
-
-                $_FILES = null;
 
                 return 'Файл успешно загружен';
 

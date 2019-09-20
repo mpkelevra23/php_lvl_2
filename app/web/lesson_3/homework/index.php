@@ -7,7 +7,8 @@ include_once 'Twig/Autoloader.php';
 Twig_Autoloader::register();
 
 if (!empty($_FILES) && is_uploaded_file($_FILES['picture']['tmp_name'])) {
-    $message = Picture::save();
+    Picture::save();
+    header("Location: index.php");
 } else $message = 'Выберите файл для загрузки';
 
 $pictures = Picture::getPictures();
