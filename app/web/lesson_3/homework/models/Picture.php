@@ -38,8 +38,10 @@ class Picture
                 self::createThumb(150, 150, './data/img/' . $file, './data/thumb/' . $file, $type);
                 // Соединение с БД
                 $db = Db::getConnection();
-                // Сохраняем данные в бд.
+                // Сохраняем данные в БД.
                 $db->query("INSERT INTO `pictures` (`name`, address, thumb_address, `size`) VALUES ('$file', '$address', '$thumbAddress', '$size')");
+                // Закрываем соединение с БД
+                Db::closeConnection($db);
 
                 $_FILES = null;
 
@@ -63,6 +65,8 @@ class Picture
         $db = Db::getConnection();
         // Получение и возврат результатов.
         $result = $db->query("SELECT `id`, `thumb_address` FROM `pictures` ORDER BY `view_count` DESC ")->fetchAll(PDO::FETCH_ASSOC);
+        // Закрываем соединение с БД
+        Db::closeConnection($db);
 
         return $result;
     }
@@ -78,6 +82,8 @@ class Picture
         $db = Db::getConnection();
         // Получение и возврат результатов.
         $result = $db->query("SELECT `address` FROM `pictures` WHERE `id` = $pictureId")->fetch(PDO::FETCH_ASSOC);
+        // Закрываем соединение с БД
+        Db::closeConnection($db);
 
         return $result;
     }
