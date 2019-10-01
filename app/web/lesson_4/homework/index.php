@@ -1,63 +1,36 @@
-<?php
-
-include 'backend/config.php';
-
-include 'Twig/Autoloader.php';
-Twig_Autoloader::register();
-
-try {
-    $dbh = new PDO($dsn, $dbUser, $dbPass);
-} catch (PDOException $e) {
-    echo "Error: Could not connect. " . $e->getMessage();
-}
-
-$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-if (isset($_POST['more'])) {
-    $mult = $_POST['more'];
-
-    try {
-        $sql = "SELECT `id`, `thumb_adress` FROM `pictures` LIMIT 0," . 1 * $mult;
-        $sth = $dbh->query($sql);
-        while ($row = $sth->fetchObject()) {
-            $data[] = $row;
-        }
-
-        unset($dbh);
-
-        $loader = new Twig_Loader_Filesystem('templates');
-
-        $twig = new Twig_Environment($loader);
-
-        $template = $twig->loadTemplate('view.tmpl');
-
-        echo $template->render(array(
-            'data' => $data,
-        ));
-
-    } catch (Exception $e) {
-        die ('ERROR: ' . $e->getMessage());
-    }
-} else {
-    try {
-        $sql = "SELECT `id`, `thumb_adress` FROM `pictures` LIMIT 0, 2";
-        $sth = $dbh->query($sql);
-        while ($row = $sth->fetchObject()) {
-            $data[] = $row;
-        }
-        unset($dbh);
-
-        $loader = new Twig_Loader_Filesystem('templates');
-
-        $twig = new Twig_Environment($loader);
-
-        $template = $twig->loadTemplate('view.tmpl');
-
-        echo $template->render(array(
-            'data' => $data,
-        ));
-
-    } catch (Exception $e) {
-        die ('ERROR: ' . $e->getMessage());
-    }
-}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Product</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var more = 2;
+            $("#more").click(function () {
+                var str = "more=" + more;
+                $.ajax({
+                    type: "POST",
+                    url: "ProductController.php",
+                    data: str,
+                    success: function (msg) {
+                        $("#result").html(msg);
+                    }
+                });
+                more++;
+            })
+        })
+    </script>
+</head>
+<body>
+<div id="result">
+    <?php
+    include_once 'ProductController.php';
+    ?>
+</div>
+<button id="more">Ещё</button>
+</body>
+</html>
