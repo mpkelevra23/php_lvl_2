@@ -7,7 +7,7 @@
  */
 
 try {
-    $dbn = new PDO('mysql:dbname=store;host=localhost', 'admin', '123456');
+    $dbn = new PDO('pgsql:dbname=admin;port=5432;host=localhost', 'admin', '123456');
 } catch (PDOException $e) {
     echo "Error: Could not connect. " . $e->getMessage();
 }

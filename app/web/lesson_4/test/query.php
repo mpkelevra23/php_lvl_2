@@ -11,7 +11,7 @@ include 'conn.php';
 if (isset($_POST['more'])) {
     $mult = $_POST['more'];
     try {
-        $sql = "SELECT `name` FROM `pictures` LIMIT 0," . 1 * $mult;
+        $sql = "SELECT name FROM product LIMIT 2 * $mult OFFSET 0";
         $sth = $dbn->prepare($sql);
         $sth->execute();
 
@@ -23,11 +23,11 @@ if (isset($_POST['more'])) {
     }
 
     foreach ($data as $line) {
-        echo '<li>' . $line . '<line>';
+        echo '<li>' . $line . '</li>';
     }
 } else {
     try {
-        $sql = "SELECT `name` FROM `pictures` LIMIT 0, 1";
+        $sql = "SELECT name FROM product LIMIT 2 OFFSET 0";
         $sth = $dbn->prepare($sql);
         $sth->execute();
 
@@ -39,7 +39,7 @@ if (isset($_POST['more'])) {
     }
 
     foreach ($data as $line) {
-        echo '<li>' . $line . '<line>';
+        echo '<li>' . $line . '</li>';
     }
 }
 
