@@ -1,5 +1,6 @@
 <?php
 
+// TODO Попробуй реализовать автозагрузку
 include_once 'models/Picture.php';
 
 include_once 'Twig/Autoloader.php';

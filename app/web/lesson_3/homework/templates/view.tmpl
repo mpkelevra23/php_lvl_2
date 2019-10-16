@@ -11,7 +11,7 @@
     <h2>Галерея</h2>
     <div class="pictures">
           {% for picture in pictures %}
-          <a href='image.php?photo={{ picture.id }}'> <img src={{ picture.thumb_address }}></a>
+          <a href='image.php?photo={{ picture.id }}'> <img alt="Picture" src={{ picture.thumb_address }}></a>
           {% endfor %}
     </div>
     <div class="load">

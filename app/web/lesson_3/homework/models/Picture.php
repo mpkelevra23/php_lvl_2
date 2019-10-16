@@ -37,12 +37,18 @@ class Picture
 
                 //создаём аватар картинки
                 self::createThumb(150, 150, './data/img/' . $file, './data/thumb/' . $file, $type);
-                // Соединение с БД
-                $db = Db::getConnection();
-                // Сохраняем данные в БД.
-                $db->query("INSERT INTO `pictures` (`name`, address, thumb_address, `size`) VALUES ('$file', '$address', '$thumbAddress', '$size')");
-                // Закрываем соединение с БД
-                Db::closeConnection($db);
+
+                try {
+                    // Соединение с БД
+                    $db = Db::getInstance()->getConnection();
+                    // Сохраняем данные в БД.
+                    $db->query("INSERT INTO `pictures` (`name`, address, thumb_address, `size`) VALUES ('$file', '$address', '$thumbAddress', '$size')");
+                    // Закрываем соединение с БД
+                    Db::getInstance()->closeConnection($db);
+                } catch (PDOException $e) {
+                    print "Error!: " . $e->getMessage() . "<br/>";
+                    die();
+                }
 
                 return 'Файл успешно загружен';
 
@@ -60,12 +66,17 @@ class Picture
      */
     public static function getPictures()
     {
-        // Соединение с БД
-        $db = Db::getConnection();
-        // Получение и возврат результатов.
-        $result = $db->query("SELECT `id`, `thumb_address` FROM `pictures` ORDER BY `view_count` DESC ")->fetchAll(PDO::FETCH_ASSOC);
-        // Закрываем соединение с БД
-        Db::closeConnection($db);
+        try {
+            // Соединение с БД
+            $db = Db::getInstance()->getConnection();
+            // Получение и возврат результатов.
+            $result = $db->query("SELECT `id`, `thumb_address` FROM `pictures` ORDER BY `view_count` DESC ")->fetchAll(PDO::FETCH_ASSOC);
+            // Закрываем соединение с БД
+            Db::getInstance()->closeConnection($db);
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die();
+        }
 
         return $result;
     }
@@ -77,12 +88,17 @@ class Picture
      */
     public static function getPictureById($pictureId)
     {
-        // Соединение с БД
-        $db = Db::getConnection();
-        // Получение и возврат результатов.
-        $result = $db->query("SELECT `address` FROM `pictures` WHERE `id` = $pictureId")->fetch(PDO::FETCH_ASSOC);
-        // Закрываем соединение с БД
-        Db::closeConnection($db);
+        try {
+            // Соединение с БД
+            $db = Db::getInstance()->getConnection();
+            // Получение и возврат результатов.
+            $result = $db->query("SELECT `address` FROM `pictures` WHERE `id` = $pictureId")->fetch(PDO::FETCH_ASSOC);
+            // Закрываем соединение с БД
+            Db::getInstance()->closeConnection($db);
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die();
+        }
 
         return $result;
     }
