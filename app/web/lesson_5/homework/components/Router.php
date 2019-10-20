@@ -20,7 +20,7 @@ class Router
      * Возвращаем запрашиваемый uri адрес
      * @return string
      */
-    private static function getURI(): string
+    public static function getURI(): string
     {
         return trim(str_replace('lesson_5/homework', '', mb_strtolower($_SERVER['REQUEST_URI'])), '/');
     }
