@@ -24,6 +24,11 @@ class CabinetController
             // Получаем данные о пользователе из бд
             $user = User::getUserById($userId);
 
+            // Получаем 5 последних адресов, на которых был пользователь
+            if (isset($_SESSION['last_actions']) && is_array($_SESSION['last_actions'])) {
+                $last_actions = array_slice($_SESSION['last_actions'], -5, 5);
+            }
+
             // Подключаем вид
             require_once(ROOT . '/views/cabinet/index.php');
         }

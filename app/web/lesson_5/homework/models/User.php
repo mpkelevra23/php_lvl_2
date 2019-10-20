@@ -30,7 +30,7 @@ class User
         // Выполняем подготовленный запрос
         $sth->execute();
 
-        // Сохраняем результат запроса
+        // Получаем id нового пользователя
         $result = $dbh->lastInsertId();
 
         // Закрываем соединение с бд
@@ -81,7 +81,8 @@ class User
     public static function authorization($userId)
     {
         // Записываем id пользователя в сессию
-        return $_SESSION['user'] = $userId;
+        $_SESSION['user'] = $userId;
+        $_SESSION['arr'] = self::getLastActions($userId);
     }
 
     /**
@@ -191,5 +192,87 @@ class User
             return true;
         }
         return false;
+    }
+
+    /**
+     * Сохраняем 5 последних адресов, на которых был пользователь
+     * @param $userId
+     * @param $last_actions
+     * @return bool
+     */
+    public static function saveLastActions($userId, $last_actions)
+    {
+
+        // Сериализуем последние действия пользователя
+        $last_actions = serialize($last_actions);
+
+        // Подключаемся к бд
+        $dbh = Db::getConnection();
+
+        // Подготовленный запрос
+        $sth = $dbh->prepare('UPDATE lesson_5.users SET last_actions = :last_actions WHERE id = :id');
+        $sth->bindParam(':last_actions', $last_actions, PDO::PARAM_STR);
+        $sth->bindParam(':id', $userId, PDO::PARAM_INT);
+
+        // Выполняем подготовленный запрос
+        $result = $sth->execute();
+
+        // Закрываем соединение с бд
+        $sth = null;
+        $dbh = null;
+
+        // Возвращаем результат запроса
+        return $result;
+
+    }
+
+    /**
+     * Получаем 5 последних адресов, на которых был пользователь
+     * @param $id
+     * @return bool|mixed
+     */
+    public static function getLastActions($id)
+    {
+        // Подключаемся к бд
+        $dbh = Db::getConnection();
+
+        $sth = $dbh->prepare('SELECT last_actions FROM lesson_5.users WHERE id = :id');
+        $sth->bindParam(':id', $id, PDO::PARAM_INT);
+
+        // Выполняем подготовленный запрос
+        $sth->execute();
+
+        // Сохраняем результат запроса
+        $result = $sth->fetch();
+
+        // Закрываем соединение с бд
+        $sth = null;
+        $dbh = null;
+
+        // Возвращаем результат запроса
+        if (!is_null($result)) {
+            return unserialize($result['last_actions']);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Отслеживаем последние адреса, на которых был пользователь
+     */
+    public static function trackingUserActions()
+    {
+        if (isset($_SESSION['last_actions']) && is_array($_SESSION['last_actions'])) {
+
+            $x = count($_SESSION['last_actions']);
+
+            $x++;
+
+            $_SESSION['last_actions'][$x] = Router::getURI();
+        } elseif (User::getLastActions($_SESSION['user']) == false) {
+            $_SESSION['last_actions'] = [];
+        } else {
+            $_SESSION['last_actions'] = User::getLastActions($_SESSION['user']);
+        }
     }
 }

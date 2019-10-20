@@ -111,21 +111,16 @@ class UserController
         if (User::isGuest()) {
             header("Location: /index/");
         } else {
-            // Удаляем все переменные сессии.
-            $_SESSION = [];
+            //Сохраняем 5 последних адресов, на которых был пользователь
+            $userId = $_SESSION['user'];
+            $last_actions = array_slice($_SESSION['last_actions'], -5, 5);
+            User::saveLastActions($userId, $last_actions);
 
-            // Если требуется уничтожить сессию, также необходимо удалить сессионные cookie.
-            // Замечание: Это уничтожит сессию, а не только данные сессии!
-            if (ini_get("session.use_cookies")) {
-                $params = session_get_cookie_params();
-                setcookie(session_name(), '', time() - 42000,
-                    $params["path"], $params["domain"],
-                    $params["secure"], $params["httponly"]
-                );
-            }
+            // Удаляем данные пользователя из сессии
+            unset($_SESSION['user']);
+            unset($_SESSION['last_actions']);
 
-            // Наконец, уничтожаем сессию.
-            session_destroy();
+            // Переходим на главную страницу
             header('Location: /index/');
         }
     }
