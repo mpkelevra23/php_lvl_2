@@ -119,6 +119,7 @@ class UserController
             // Удаляем данные пользователя из сессии
             unset($_SESSION['user']);
             unset($_SESSION['last_actions']);
+            session_destroy();
 
             // Переходим на главную страницу
             header('Location: /index/');
