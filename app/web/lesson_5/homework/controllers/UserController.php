@@ -75,6 +75,8 @@ class UserController
             // Проверяем полученный данные от пользователя
             if (!User::checkEmail($email)) {
                 $errors['email'] = 'Неправильный email';
+            } elseif (!User::checkEmailExists($email)) {
+                $errors['email'] = 'Пользователя с данным email не существует в базе';
             }
             if (!User::checkPassword($password)) {
                 $errors['password'] = 'Пароль не должен быть короче 6-ти символов';
@@ -117,8 +119,8 @@ class UserController
             User::saveLastActions($userId, $last_actions);
 
             // Удаляем данные пользователя из сессии
-            unset($_SESSION['user']);
-            unset($_SESSION['last_actions']);
+            $_SESSION['user'] = null;
+            $_SESSION['last_actions'] = null;
             session_destroy();
 
             // Переходим на главную страницу
