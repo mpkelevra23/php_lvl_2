@@ -66,7 +66,7 @@ class User
         $sth = null;
         $dbh = null;
 
-        // Если запись существует, возвращаем id пользователя
+        // Если пароль верный, возвращаем id пользователя
         if (password_verify($password, $user['password'])) {
             return $user['id'];
         }
@@ -82,7 +82,14 @@ class User
     {
         // Записываем id пользователя в сессию
         $_SESSION['user'] = $userId;
-        $_SESSION['arr'] = self::getLastActions($userId);
+        // Записываем данные о последних посещённых страницах
+        if (User::getLastActions($_SESSION['user']) == false) {
+            // Присваиваем пустой массив, если нет данных о последних посещённых страницах
+            $_SESSION['last_actions'] = [];
+        } else {
+            // Присваиваем данные о последних посещённых страницах
+            $_SESSION['last_actions'] = self::getLastActions($_SESSION['user']);
+        }
     }
 
     /**
@@ -236,6 +243,7 @@ class User
         // Подключаемся к бд
         $dbh = Db::getConnection();
 
+        // Подготовленный запрос
         $sth = $dbh->prepare('SELECT last_actions FROM lesson_5.users WHERE id = :id');
         $sth->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -262,17 +270,17 @@ class User
      */
     public static function trackingUserActions()
     {
+        // Проверям существует ли массив с последними посещёнными страницами
         if (isset($_SESSION['last_actions']) && is_array($_SESSION['last_actions'])) {
 
-            $x = count($_SESSION['last_actions']);
+            // Считываем кол-во элементов в массиве
+            $count = count($_SESSION['last_actions']);
 
-            $x++;
+            // Увеличиваем на единицу
+            $count++;
 
-            $_SESSION['last_actions'][$x] = Router::getURI();
-        } elseif (User::getLastActions($_SESSION['user']) == false) {
-            $_SESSION['last_actions'] = [];
-        } else {
-            $_SESSION['last_actions'] = User::getLastActions($_SESSION['user']);
+            // Добавляем новый элемент в массив
+            $_SESSION['last_actions'][$count] = Router::getURI();
         }
     }
 }
