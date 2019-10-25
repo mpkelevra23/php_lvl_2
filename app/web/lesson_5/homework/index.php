@@ -15,7 +15,7 @@ require_once ROOT . '/components/Autoload.php';
 session_start();
 
 // Отслеживаем действия пользователя
-if (!User::isGuest()){
+if (!User::isGuest()) {
     User::trackingUserActions();
 }
 
