@@ -43,4 +43,4 @@ class Test
 $obj_1 = Test::getInstance();
 $obj_2 = Test::getInstance();
 
-var_dump($obj_1 === $obj_2);    // Same object
+var_dump($obj_1 === $obj_2);    // Вернёт true, так как это один и тот же объект данного класса

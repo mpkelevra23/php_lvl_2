@@ -8,7 +8,7 @@
 
 class Test
 {
-    protected static $object;
+    private static $object;
 
     private function __construct()
     {
@@ -25,18 +25,18 @@ class Test
 
     public function demo()
     {
-        echo "test";
+        return "test";
     }
 }
 
 $obj = Test::getObject();
-$obj->demo();
+echo $obj->demo();
 
 echo '<hr>';
 
 class SomeClass
 {
-    protected static $_instance;
+    private static $_instance;
 
     private function __construct()
     {
