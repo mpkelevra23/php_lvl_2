@@ -155,7 +155,7 @@ class User
         $sth = null;
         $dbh = null;
 
-        // Возвращаем результат запроса
+        // Возвращаем результат проверки
         if ($result) {
             return true;
         }
