@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css?family=Lora');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #cdcdcd;
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+}
+
+.container {
+    max-width: 1200px;
+    width: auto;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 98px;
+    border-bottom: 2px solid black;
+}
+
+.link {
+    display: block;
+    height: 100px;
+    width: 100px;
+    padding: 0 0 0 30px;
+}
+
+.logo {
+    height: 100px;
+    /*background: url("../img/nike_logo.png") center / contain no-repeat;*/
+}
+
+@media screen and (max-width: 700px) {
+    .menu {
+        width: 200px;
+    }
+}
+
+.menu li {
+    display: inline-block;
+}
+
+.menu li:after {
+    content: "|";
+    color: #000000;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.menu li:last-child:after {
+    content: none;
+}
+
+.menu a {
+    font-family: 'Comfortaa', cursive;
+    letter-spacing: 2px;
+    position: relative;
+    margin: 0 30px 0 30px;
+    font-size: 20px;
+    text-transform: uppercase;
+    display: inline-block;
+    transition: color .5s;
+}
+
+.menu a, .menu a:visited {
+    color: #000000;
+}
+
+.menu a:hover {
+    color: #ff5309;
+}
+
+.menu a:before,
+.menu a:after {
+    content: "";
+    position: absolute;
+    height: 2px;
+    top: auto;
+    right: 50%;
+    bottom: -5px;
+    left: 50%;
+    background: #ff5309;
+    transition: .5s;
+}
+
+.menu a:hover:before {
+    left: 0;
+}
+
+.menu a:hover:after {
+    right: 0;
+}
+
+.content {
+    min-height: calc(100vh - 200px);
+}
+
+input[type="text"], input[type="email"], textarea {
+    display: block;
+    padding: 5px;
+    color: #484343;
+    outline: none;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+input[type="text"], input[type="email"] {
+    width: 350px;
+    height: 20px;
+    color: #484343;
+}
+
+input[type="text"] {
+    text-transform: capitalize;
+}
+
+input[type="email"]:focus {
+    color: #484343;
+    background-color: #cac4c4;
+}
+
+textarea {
+    text-transform: capitalize;
+    width: 350px;
+    height: 150px;
+}
+
+input[type="submit"] {
+    width: 100px;
+    height: 30px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+footer {
+    height: 100px;
+    background-color: #191919;
+    color: white;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    max-width: 1200px;
+    width: auto;
+    height: 100%;
+    margin: 0 auto;
+    background-color: transparent;
+}
+
+.footer p {
+    font-family: 'Comfortaa', cursive;
+    text-align: center;
+    font-size: 12px;
+    margin-right: 25px;
+}
+
+
+table {
+    width: 500px; /* Ширина таблицы */
+    border: 3px solid black; /* Рамка вокруг таблицы */
+    border-collapse: collapse; /* Отображать только одинарные линии */
+}
+
+th {
+    text-align: left; /* Выравнивание по левому краю */
+    background: #ccc; /* Цвет фона ячеек */
+    padding: 5px; /* Поля вокруг содержимого ячеек */
+    border: 3px solid black; /* Граница вокруг ячеек */
+}
+
+td {
+    padding: 5px; /* Поля вокруг содержимого ячеек */
+    border: 3px solid black; /* Граница вокруг ячеек */
+}
+
+thead {
+    font-weight: bold;
+    text-align: center; /* Выравнивание по левому краю */
+}

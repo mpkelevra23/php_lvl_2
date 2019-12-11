@@ -1,5 +1,9 @@
 <?php require_once ROOT . '/views/layouts/header.php'; ?>
 
-<h1>Страницы <?= $uri ?> не существует</h1>
+<div class="content">
+
+    <h1><?= $error ?></h1>
+
+</div>
 
 <?php require_once ROOT . '/views/layouts/footer.php'; ?>
