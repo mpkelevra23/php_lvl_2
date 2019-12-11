@@ -4,20 +4,8 @@
  * Класс для работы с пользователем
  * Class User
  */
-class User
+class User extends BaseModel
 {
-    // Объект класса Db
-    private $dbh;
-
-    /**
-     * Создаём объект класса Db
-     * User constructor.
-     */
-    public function __construct()
-    {
-        return $this->dbh = Db::getInstance();
-    }
-
     /**
      * Регистрация пользователя в бд
      * @param $name
@@ -31,10 +19,10 @@ class User
         $password = password_hash($password, PASSWORD_BCRYPT);
 
         // Выполняем запрос
-        $this->dbh->run('INSERT INTO lesson_6.users(name, email, password) VALUES (:name, :email, :password)', [$name, $email, $password]);
+        parent::getDbh()->run('INSERT INTO lesson_6.users(name, email, password) VALUES (:name, :email, :password)', [$name, $email, $password]);
 
         // Получаем id нового пользователя
-        return $this->dbh->lastInsertId();
+        return parent::getDbh()->run('SELECT id FROM lesson_6.users WHERE email = :email AND name = :name', [$email, $name])->fetch();
     }
 
     /**
@@ -46,7 +34,7 @@ class User
     public function authentication($email, $password)
     {
         // Выполняем запрос
-        $user = $this->dbh->run('SELECT id, password FROM lesson_6.users WHERE email = :email', [$email])->fetch();
+        $user = parent::getDbh()->run('SELECT id, password FROM lesson_6.users WHERE email = :email', [$email])->fetch();
 
         // Если пароль верный, возвращаем id пользователя
         if (password_verify($password, $user['password'])) {
@@ -70,7 +58,7 @@ class User
             $_SESSION['last_actions'] = [];
         } else {
             // Присваиваем данные о последних посещённых страницах
-            $_SESSION['last_actions'] = self::getLastActions($_SESSION['user']);
+            $_SESSION['last_actions'] = self::getLastActions($userId);
         }
     }
 
@@ -82,7 +70,7 @@ class User
     public function getUserById($id)
     {
         // Выполняем и возвращаем результат запрос
-        return $this->dbh->run('SELECT * FROM lesson_6.users WHERE id = :id', [$id])->fetch();
+        return parent::getDbh()->run('SELECT * FROM lesson_6.users WHERE id = :id', [$id])->fetch();
     }
 
     /**
@@ -98,6 +86,32 @@ class User
     }
 
     /**
+     * Проверяем является ли пользователь админом (2 = admin)
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        if (parent::getDbh()->run('SELECT id FROM lesson_6.user_role WHERE id_user = :id_user AND id_role = 2', [self::getUserId()])->fetch()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Возвращает идентификатор пользователя, если он авторизирован.
+     * @return bool|mixed
+     */
+
+    public static function getUserId()
+    {
+        // Если сессия есть, вернем идентификатор пользователя
+        if (isset($_SESSION['user'])) {
+            return $_SESSION['user'];
+        }
+        return false;
+    }
+
+    /**
      * Проверяем существует ли email в бд
      * @param $email
      * @return bool
@@ -105,7 +119,7 @@ class User
     public function checkEmailExists($email)
     {
         // Выполняем запрос
-        $result = $this->dbh->run('SELECT COUNT(*) FROM lesson_6.users WHERE email = :email', [$email])->fetchColumn();
+        $result = parent::getDbh()->run('SELECT COUNT(*) FROM lesson_6.users WHERE email = :email', [$email])->fetchColumn();
 
         // Возвращаем результат проверки
         if ($result) {
@@ -119,7 +133,7 @@ class User
      * @param $email
      * @return bool
      */
-    public function checkEmail($email)
+    public static function checkEmail($email)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return true;
@@ -132,7 +146,7 @@ class User
      * @param $name
      * @return bool
      */
-    public function checkName($name)
+    public static function checkName($name)
     {
         if (strlen($name) >= 6) {
             return true;
@@ -145,7 +159,7 @@ class User
      * @param $password
      * @return bool
      */
-    public function checkPassword($password)
+    public static function checkPassword($password)
     {
         if (strlen($password) >= 6) {
             return true;
@@ -165,7 +179,7 @@ class User
         $last_actions = serialize($last_actions);
 
         // Выполняем запрос
-        return $this->dbh->run('UPDATE lesson_6.users SET last_actions = :last_actions WHERE id = :id', [$last_actions, $userId]);
+        return parent::getDbh()->run('UPDATE lesson_6.users SET last_actions = :last_actions WHERE id = :id', [$last_actions, $userId]);
     }
 
     /**
@@ -176,7 +190,7 @@ class User
     public function getLastActions($id)
     {
         // Выполняем запрос
-        $result = $this->dbh->run('SELECT last_actions FROM lesson_6.users WHERE id = :id', [$id])->fetch();
+        $result = parent::getDbh()->run('SELECT last_actions FROM lesson_6.users WHERE id = :id', [$id])->fetch();
 
         // Возвращаем результат запроса
         if (!is_null($result)) {

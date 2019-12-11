@@ -16,7 +16,7 @@ class Db
      * Db constructor.
      * При создании объекта класса Db создаём объект класса PDO
      */
-    public function __construct()
+    private function __construct()
     {
         // Подключаем конфигурациооный файл
         $paramsPath = ROOT . '/config/db_params.php';

@@ -3,17 +3,20 @@
 /**
  * Class SiteController
  */
-class SiteController
+class SiteController extends BaseController
 {
+
     /**
      * Action для главной страницы
      * @return bool
      */
     public function actionIndex()
     {
+        // Получаем массив с товарами
+        $goods = parent::getGoodsObj()->getGoodsList();
+
         // Подключаем вид
         require_once(ROOT . '/views/site/index.php');
-
         return true;
     }
 
@@ -26,9 +29,12 @@ class SiteController
         // Получаем адрес запроса
         $uri = trim(str_replace('lesson_5/homework', '', mb_strtolower($_SERVER['REQUEST_URI'])), '/');
 
-        // Подключаем вид
-        require_once(ROOT . '/views/site/error.php');
+        // Сообщение об ошибке
+        $error = 'Страницы ' . $uri . ' не существует';
 
-        return true;
+        // Выводим ошибку
+        if (!empty($error)) {
+            parent::showError($error);
+        }
     }
 }
