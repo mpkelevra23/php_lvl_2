@@ -22,7 +22,7 @@ class Router
      */
     public static function getURI(): string
     {
-        return trim(str_replace('lesson_5/homework', '', mb_strtolower($_SERVER['REQUEST_URI'])), '/');
+        return trim(mb_strtolower($_SERVER['REQUEST_URI']), '/');
     }
 
     /**
