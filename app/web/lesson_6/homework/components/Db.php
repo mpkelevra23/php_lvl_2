@@ -80,4 +80,12 @@ class Db
         $stmt->execute($args);
         return $stmt;
     }
+
+    /**
+     * Закрываем соединение с БД
+     */
+    public static function closeDbh()
+    {
+        self::$instance = null;
+    }
 }

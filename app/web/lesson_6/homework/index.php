@@ -28,3 +28,6 @@ try {
         "<br>Файла " . $exception->getFile() . "</p>";
     die();
 }
+
+// Закрываем соединение с БД
+Db::closeDbh();
