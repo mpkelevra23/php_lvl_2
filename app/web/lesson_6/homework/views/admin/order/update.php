@@ -8,10 +8,11 @@
             <label for="order">
                 <select name="status" required>
                     <?php foreach ($orderStatus as $status): ?>
-                        <?php if ($status['id'] === $order['status_id']) {
-                            echo '<option selected value="' . $status['id'] . '">' . $status['name'] . '</option>';
-                        } else echo '<option value="' . $status['id'] . '">' . $status['name'] . '</option>';
-                        ?>
+                        <?php if ($status['id'] === $order['status_id']) : ?>
+                            <option selected value="<?= $status['id']; ?>"><?= $status['name']; ?></option>
+                        <?php else : ?>
+                            <option value="<?= $status['id']; ?>"><?= $status['name']; ?></option>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
             </label>
