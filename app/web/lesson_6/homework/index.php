@@ -20,14 +20,7 @@ if (!User::isGuest()) {
 }
 
 // Вызов Router
-try {
-    Router::run();
-} catch (Exception $exception) {
-    echo "<p>Ошибка! " . $exception->getMessage() .
-        "<br>В строке " . $exception->getLine() .
-        "<br>Файла " . $exception->getFile() . "</p>";
-    die();
-}
+Router::run();
 
 // Закрываем соединение с БД
 Db::closeDbh();

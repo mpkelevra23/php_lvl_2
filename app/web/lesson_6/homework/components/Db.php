@@ -24,10 +24,16 @@ class Db
 
         // Создаём объект класса PDO
         $dsn = "{$params['dbms']}:host={$params['host']};port={$params['port']};dbname={$params['dbname']}";
-        $this->pdo = new PDO($dsn, $params['user'], $params['password'], [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]);
+
+        try {
+            $this->pdo = new PDO($dsn, $params['user'], $params['password'], [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]);
+        } catch (PDOException $e) {
+            print "<b>Ошибка соединения!:</b><br> " . $e->getMessage() . "<br>";
+            die();
+        }
     }
 
     private function __sleep()
@@ -73,12 +79,17 @@ class Db
      */
     public function run($sql, $args = [])
     {
-        if (!$args) {
-            return $this->pdo->query($sql);
+        try {
+            if (!$args) {
+                return $this->pdo->query($sql);
+            }
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($args);
+            return $stmt;
+        } catch (PDOException $e) {
+            print "<b>Ошибка запроса:</b><br> " . $e->getMessage() . "<br>";
+            die();
         }
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($args);
-        return $stmt;
     }
 
     /**
