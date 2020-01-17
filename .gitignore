@@ -1,3 +1,6 @@
 *.[g]
 logs
 .idea
+/vendor/
+/composer.lock
+/composer.phar

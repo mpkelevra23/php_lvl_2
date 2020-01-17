@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * Абстрактный класс BaseController содержит общую логигу для контроллеров
+ * Class BaseController
+ */
+abstract class BaseController
+{
+    // Объект класса User
+    private $user;
+    // Объект класса Basket
+    private $basket;
+    // Объект класса Order
+    private $order;
+    // Объект класса Goods
+    private $goods;
+
+    /**
+     * Создаём объект класса User
+     * Создаём объект класса Basket
+     * Создаём объект класса Order
+     * Создаём объект класса Goods
+     * BaseController constructor.
+     */
+    public function __construct()
+    {
+        $this->user = new User();
+        $this->basket = new Basket();
+        $this->order = new Order();
+        $this->goods = new Goods();
+    }
+
+    /**
+     * @return User
+     */
+    protected function getUserObj(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return Basket
+     */
+    protected function getBasketObj(): Basket
+    {
+        return $this->basket;
+    }
+
+    /**
+     * @return Order
+     */
+    protected function getOrderObj(): Order
+    {
+        return $this->order;
+    }
+
+    /**
+     * @return Goods
+     */
+    protected function getGoodsObj(): Goods
+    {
+        return $this->goods;
+    }
+
+    /**
+     * Подключаем вид с выводом ошибки
+     * @param $error
+     */
+    protected function showError($error)
+    {
+        // Подключаем вид
+        require_once(ROOT . '/views/site/error.php');
+        die();
+    }
+}
