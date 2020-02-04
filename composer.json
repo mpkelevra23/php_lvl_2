@@ -3,6 +3,7 @@
     "phpunit/phpunit": "8.5.2"
   },
   "require": {
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "ext-gd": "*"
   }
 }
