@@ -22,7 +22,7 @@ class Router
      */
     public static function getURI(): string
     {
-        return trim(mb_strtolower($_SERVER['REQUEST_URI']), '/');
+        return trim($_SERVER['REQUEST_URI'], '/');
     }
 
     /**
@@ -58,8 +58,9 @@ class Router
                 // Создать объект, вызвать метод (т.е. action)
                 $controllerObject = new $controllerName;
 
-                /* Вызываем необходимый метод ($actionName) у определенного класса ($controllerObject) с заданными ($parameters) параметрами.
-                 * Если метод контроллера успешно вызван, завершаем работу роутера
+                /*
+                 * Вызываем необходимый метод ($actionName) у определенного класса ($controllerObject) с заданными ($parameters) параметрами.
+                 * Если метод контроллера успешно вызван и вкрнул true, завершаем работу роутера
                  */
                 if (call_user_func_array([$controllerObject, $actionName], $parameters)) {
                     break;
