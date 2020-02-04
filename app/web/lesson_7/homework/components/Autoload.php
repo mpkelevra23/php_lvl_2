@@ -1,5 +1,7 @@
 <?php
 
+define('ROOT', '/var/www/php_lvl_2.local/app/web/lesson_7/homework');
+
 spl_autoload_register(function ($class_name) {
     $array_paths = [
         '/models/',
