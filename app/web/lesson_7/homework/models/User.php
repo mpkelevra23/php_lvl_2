@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Класс для работы с пользователем
+ * Model для работы с пользователем
  * Class User
  */
-class User extends BaseModel
+class User
 {
     /**
      * Регистрация пользователя в бд
@@ -19,10 +19,10 @@ class User extends BaseModel
         $password = password_hash($password, PASSWORD_BCRYPT);
 
         // Выполняем запрос
-        parent::getDbh()->run('INSERT INTO lesson_7.users(name, email, password) VALUES (:name, :email, :password)', [$name, $email, $password]);
+        Db::getInstance()->run('INSERT INTO lesson_7.users(name, email, password) VALUES (:name, :email, :password)', [$name, $email, $password]);
 
         // Получаем id нового пользователя
-        return parent::getDbh()->run('SELECT id FROM lesson_7.users WHERE email = :email AND name = :name', [$email, $name])->fetch();
+        return Db::getInstance()->lastInsertId('admin.lesson_7.users_id_seq');
     }
 
     /**
@@ -34,7 +34,7 @@ class User extends BaseModel
     public function authentication($email, $password)
     {
         // Выполняем запрос
-        $user = parent::getDbh()->run('SELECT id, password FROM lesson_7.users WHERE email = :email', [$email])->fetch();
+        $user = Db::getInstance()->run('SELECT id, password FROM lesson_7.users WHERE email = :email', [$email])->fetch();
 
         // Если пароль верный, возвращаем id пользователя
         if (password_verify($password, $user['password'])) {
@@ -46,7 +46,7 @@ class User extends BaseModel
     /**
      * Авторизация пользователя
      * @param $userId
-     * @return mixed
+     * @return array|bool|mixed
      */
     public function authorization($userId)
     {
@@ -55,10 +55,10 @@ class User extends BaseModel
         // Записываем данные о последних посещённых страницах
         if (self::getLastActions($_SESSION['user']) == false) {
             // Присваиваем пустой массив, если нет данных о последних посещённых страницах
-            $_SESSION['last_actions'] = [];
+            return $_SESSION['last_actions'] = [];
         } else {
             // Присваиваем данные о последних посещённых страницах
-            $_SESSION['last_actions'] = self::getLastActions($userId);
+            return $_SESSION['last_actions'] = self::getLastActions($userId);
         }
     }
 
@@ -70,7 +70,7 @@ class User extends BaseModel
     public function getUserById($id)
     {
         // Выполняем и возвращаем результат запрос
-        return parent::getDbh()->run('SELECT * FROM lesson_7.users WHERE id = :id', [$id])->fetch();
+        return Db::getInstance()->run('SELECT * FROM lesson_7.users WHERE id = :id', [$id])->fetch();
     }
 
     /**
@@ -91,7 +91,7 @@ class User extends BaseModel
      */
     public function isAdmin()
     {
-        if (parent::getDbh()->run('SELECT id FROM lesson_7.user_role WHERE id_user = :id_user AND id_role = 2', [self::getUserId()])->fetch()) {
+        if (Db::getInstance()->run('SELECT id FROM lesson_7.user_role WHERE id_user = :id_user AND id_role = 2', [self::getUserId()])->fetch()) {
             return true;
         }
         return false;
@@ -118,11 +118,7 @@ class User extends BaseModel
      */
     public function checkEmailExists($email)
     {
-        // Выполняем запрос
-        $result = parent::getDbh()->run('SELECT COUNT(*) FROM lesson_7.users WHERE email = :email', [$email])->fetchColumn();
-
-        // Возвращаем результат проверки
-        if ($result) {
+        if (Db::getInstance()->run('SELECT COUNT(*) FROM lesson_7.users WHERE email = :email', [$email])->fetchColumn()) {
             return true;
         }
         return false;
@@ -179,7 +175,7 @@ class User extends BaseModel
         $last_actions = serialize($last_actions);
 
         // Выполняем запрос
-        return parent::getDbh()->run('UPDATE lesson_7.users SET last_actions = :last_actions WHERE id = :id', [$last_actions, $userId]);
+        return Db::getInstance()->run('UPDATE lesson_7.users SET last_actions = :last_actions WHERE id = :userId', [$last_actions, $userId])->rowCount();
     }
 
     /**
@@ -190,7 +186,7 @@ class User extends BaseModel
     public function getLastActions($id)
     {
         // Выполняем запрос
-        $result = parent::getDbh()->run('SELECT last_actions FROM lesson_7.users WHERE id = :id', [$id])->fetch();
+        $result = Db::getInstance()->run('SELECT last_actions FROM lesson_7.users WHERE id = :id', [$id])->fetch();
 
         // Возвращаем результат запроса
         if (!is_null($result)) {
@@ -202,6 +198,7 @@ class User extends BaseModel
 
     /**
      * Отслеживаем последние адреса, на которых был пользователь
+     * @return bool|string
      */
     public static function trackingUserActions()
     {
@@ -215,7 +212,17 @@ class User extends BaseModel
             $count++;
 
             // Добавляем новый элемент в массив
-            $_SESSION['last_actions'][$count] = Router::getURI();
+            return $_SESSION['last_actions'][$count] = Router::getURI();
         }
+        return false;
+    }
+
+    /**
+     * @param $userId
+     * @return bool|false|PDOStatement
+     */
+    public function deleteUser($userId)
+    {
+        return Db::getInstance()->run('DELETE FROM lesson_7.users WHERE id = :id', [$userId])->rowCount();
     }
 }
