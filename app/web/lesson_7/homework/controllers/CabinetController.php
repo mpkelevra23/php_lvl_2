@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Класс для работы с личным кабинетом пользователя
+ * Controller для работы с личным кабинетом пользователя
  * Class CabinetController
  */
 class CabinetController extends BaseController
 {
     /**
      * Вход в личный кабинет
-     * @return bool
+     * @return bool|void
      */
     public function actionIndex()
     {
@@ -19,17 +19,31 @@ class CabinetController extends BaseController
             $userId = User::getUserId();
 
             // Получаем данные о пользователе из бд
-            $user = parent::getUserObj()->getUserById($userId);
+            $user = self::getUserObj()->getUserById($userId);
+
+            // Получаем 5 последних заказов пользователя, сортируем по дате заказа
+            $lastOrders = self::getOrderObj()->getLastUserOrders($userId);
 
             // Получаем 5 последних адресов, на которых был пользователь
             if (isset($_SESSION['last_actions']) && is_array($_SESSION['last_actions'])) {
-                $last_actions = array_slice($_SESSION['last_actions'], -5, 5);
-                // Подключаем вид
-                require_once(ROOT . '/views/cabinet/index.php');
+
+                //Титул страницы
+                $title = 'Личный кабинет';
+
+                // Последние действия пользователя
+                $lastActions = array_slice($_SESSION['last_actions'], -5, 5);
+
+                // Выводим
+                echo Templater::viewInclude(ROOT . '/views/cabinet/index.php',
+                    [
+                        'title' => $title,
+                        'user' => $user,
+                        'lastActions' => $lastActions,
+                        'lastOrders' => $lastOrders
+                    ]
+                );
                 return true;
             }
-        } else {
-            parent::showError('Необходимо войти на сайт');
-        }
+        } else return self::showError('Необходимо войти на сайт');
     }
 }
