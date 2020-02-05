@@ -1,17 +1,19 @@
 <?php
 
 /**
+ * Controller для работы с пользователем
  * Class UserController
  */
 class UserController extends BaseController
 {
     /**
      * Регистрация пользователя
-     * @return mixed
+     * @return bool
      */
     public function actionRegistration()
     {
         // Переменные для формы
+        $errors = false;
         $name = false;
         $email = false;
         $password = false;
@@ -20,9 +22,9 @@ class UserController extends BaseController
         if (!User::isGuest()) {
             header("Location: /");
         } elseif (isset($_POST['submit'])) {
-            $name = strip_tags($_POST['name']);
-            $email = strip_tags($_POST['email']);
-            $password = strip_tags($_POST['password']);
+            $name = (string)htmlspecialchars(strip_tags($_POST['name']));
+            $email = (string)htmlspecialchars(strip_tags($_POST['email']));
+            $password = (string)htmlspecialchars(strip_tags($_POST['password']));
 
             // Проверяем полученный данные от пользователя
             if (!User::checkName($name)) {
@@ -32,36 +34,46 @@ class UserController extends BaseController
                 $errors['password'] = 'Пароль должно быть не меньше 6-ти символов';
             }
             if (!User::checkEmail($email)) {
-                $errors['email'] = 'Пароль должно быть не меньше 6-ти символов';
+                $errors['email'] = 'Неправильно указан адрес электронной почты';
             }
-            if (parent::getUserObj()->checkEmailExists($email)) {
+            if (self::getUserObj()->checkEmailExists($email)) {
                 $errors['email'] = 'Такой email уже существует';
             }
 
             if (empty($errors)) {
                 // Если данные правильные, регистрируем пользователя на сайте, и возвращаем его id из бд
-                $userId = parent::getUserObj()->registration($name, $email, $password);
-
+                $userId = self::getUserObj()->registration($name, $email, $password);
                 // Запоминаем пользователя (в сессию)
-                parent::getUserObj()->authorization($userId['id']);
-
+                self::getUserObj()->authorization($userId);
                 // Перенаправляем пользователя в закрытую часть - кабинет
                 header("Location: /cabinet/");
             }
         }
-        // Подключаем вид
-        require_once(ROOT . '/views/user/registration.php');
 
+        //Титул страницы
+        $title = 'Регистрация';
+
+        // Выводим
+        echo Templater::viewInclude(ROOT . '/views/user/registration.php',
+            [
+                'title' => $title,
+                'errors' => $errors,
+                'name' => $name,
+                'email' => $email,
+                'password' => $password
+            ]
+        );
         return true;
     }
 
     /**
      * Аутентификация и авторизация пользователя
-     * @return mixed
+     * @return bool
      */
     public function actionLogin()
     {
         // Переменные для формы
+        $errors = false;
         $email = false;
         $password = false;
 
@@ -69,13 +81,13 @@ class UserController extends BaseController
         if (!User::isGuest()) {
             header("Location: /");
         } elseif (isset($_POST['submit'])) {
-            $email = strip_tags($_POST['email']);
-            $password = strip_tags($_POST['password']);
+            $email = (string)htmlspecialchars(strip_tags($_POST['email']));
+            $password = (string)htmlspecialchars(strip_tags($_POST['password']));
 
             // Проверяем полученный данные от пользователя
             if (!User::checkEmail($email)) {
                 $errors['email'] = 'Неправильный email';
-            } elseif (!parent::getUserObj()->checkEmailExists($email)) {
+            } elseif (!self::getUserObj()->checkEmailExists($email)) {
                 $errors['email'] = 'Пользователя с данным email не существует в базе';
             }
             if (!User::checkPassword($password)) {
@@ -85,22 +97,33 @@ class UserController extends BaseController
             // Если нет ошибок
             if (empty($errors)) {
                 // Если данные правильные, аутентифицируем пользователя (существует ли данный пользоваель в бд)
-                $userId = parent::getUserObj()->authentication($email, $password);
+                $userId = self::getUserObj()->authentication($email, $password);
                 //Проверяем есть ли такой пользователь
                 if ($userId == false) {
                     // Если данные неправильные - показываем ошибку
                     $errors['userId'] = 'Неправильные данные для входа на сайт';
                 } else {
                     // Если данные правильные, авторизируем (запоминаем пользователя в сессию)
-                    parent::getUserObj()->authorization($userId);
+                    self::getUserObj()->authorization($userId);
 
                     // Перенаправляем пользователя в закрытую часть - кабинет
                     header("Location: /cabinet/");
                 }
             }
         }
-        // Подключаем вид
-        require_once(ROOT . '/views/user/login.php');
+
+        //Титул страницы
+        $title = 'Вход';
+
+        // Выводим
+        echo Templater::viewInclude(ROOT . '/views/user/login.php',
+            [
+                'title' => $title,
+                'errors' => $errors,
+                'email' => $email,
+                'password' => $password
+            ]
+        );
         return true;
     }
 
@@ -116,7 +139,7 @@ class UserController extends BaseController
             //Сохраняем 5 последних адресов, на которых был пользователь
             $userId = $_SESSION['user'];
             $last_actions = array_slice($_SESSION['last_actions'], -5, 5);
-            parent::getUserObj()->saveLastActions($userId, $last_actions);
+            self::getUserObj()->saveLastActions($userId, $last_actions);
 
             // Удаляем данные пользователя из сессии
             $_SESSION['user'] = null;

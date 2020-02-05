@@ -1,26 +1,31 @@
 <?php
 
 /**
+ * Controller для работы с товарами
  * Class GoodsController
  */
 class GoodsController extends BaseController
 {
     /**
      * Просмотр одного товара
-     * @param $id
-     * @return bool
+     * @param $goodId
+     * @return bool|void
      */
-    public function actionView($id)
+    public function actionView($goodId)
     {
         // Получаем данные о товаре
-        $goods = parent::getGoodsObj()->getGoodsById($id);
-
-        if (!empty($goods)) {
-            // Подключаем вид
-            require_once(ROOT . '/views/goods/view.php');
+        $good = self::getGoodsObj()->getGoodById($goodId);
+        if (!empty($good)) {
+            //Титул страницы
+            $title = $good['name'];
+            // Выводим
+            echo Templater::viewInclude(ROOT . '/views/goods/view.php',
+                [
+                    'title' => $title,
+                    'good' => $good
+                ]
+            );
             return true;
-        } else {
-            parent::showError('Такого товара не существует');
-        }
+        } else return self::showError('Такого товара не существует');
     }
 }

@@ -64,12 +64,21 @@ abstract class BaseController
 
     /**
      * Подключаем вид с выводом ошибки
-     * @param $error
+     * @param string $error
+     * @return bool
      */
-    protected function showError($error)
+    protected function showError(string $error)
     {
-        // Подключаем вид
-        require_once(ROOT . '/views/site/error.php');
-        die();
+        //Титул страницы
+        $title = 'Ошибка';
+
+        // Выводим
+        echo Templater::viewInclude(ROOT . '/views/site/error.php',
+            [
+                'title' => $title,
+                'error' => $error
+            ]
+        );
+        return true;
     }
 }

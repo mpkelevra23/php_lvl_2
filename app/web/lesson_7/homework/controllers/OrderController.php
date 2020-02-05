@@ -1,13 +1,14 @@
 <?php
 
 /**
+ * Controller для работы с заказами
  * Class OrderController
  */
 class OrderController extends BaseController
 {
     /**
      * Создаём заказ
-     * @return bool
+     * @return bool|void
      */
     public function actionCreate()
     {
@@ -18,32 +19,34 @@ class OrderController extends BaseController
             $userId = User::getUserId();
 
             // Проверяем есть ли товар в корзине
-            if (parent::getBasketObj()->checkBasketEmpty($userId)) {
+            if (self::getBasketObj()->checkBasketEmpty($userId)) {
+
+                //Титул страницы
+                $title = 'Заказ оформлен';
 
                 // Дата создания
                 $createdAt = date("Y-m-d H:i:s");
 
                 // Общая стоймость товаров в корзине
-                $totalPrice = parent::getBasketObj()->getTotalPrice($userId);
+                $totalPrice = self::getBasketObj()->getTotalPrice($userId);
 
                 // Создаём заказ
-                parent::getOrderObj()->addOrder($userId, $createdAt, $totalPrice['sum']);
+                self::getOrderObj()->addOrder($userId, $createdAt, $totalPrice);
 
-                require_once(ROOT . '/views/order/create.php');
+                // Выводим
+                echo Templater::viewInclude(ROOT . '/views/order/create.php',
+                    ['title' => $title]
+                );
                 return true;
-            } else {
-                parent::showError('Корзина пуста');
-            }
-        } else {
-            parent::showError('Необходимо войти на сайт');
-        }
+            } else return self::showError('Корзина пуста');
+        } else return self::showError('Необходимо войти на сайт');
     }
 
     /**
      * Выводим список заказов
-     * @return bool
+     * @return bool|void
      */
-    public function actionList()
+    public function actionIndex()
     {
         if (!User::isGuest()) {
 
@@ -51,43 +54,56 @@ class OrderController extends BaseController
             $userId = User::getUserId();
 
             // Список заказов
-            $orders = parent::getOrderObj()->getUserOrderList($userId);
+            $orders = self::getOrderObj()->getUserOrderList($userId);
 
-            if (!empty($orders)) {
-                // Подключаем вид
-                require_once(ROOT . '/views/order/list.php');
-                return true;
-            } else {
-                parent::showError('Заказов нет');
-            }
-        } else {
-            parent::showError('Надо войти в систему');
-        }
+            //Титул страницы
+            $title = 'Список заказов';
+
+            // Выводим
+            echo Templater::viewInclude(ROOT . '/views/order/index.php',
+                [
+                    'title' => $title,
+                    'orders' => $orders
+                ]
+            );
+            return true;
+        } else return self::showError('Надо войти в систему');
     }
 
     /**
      * Просмотр заказа
      * @param $orderId
-     * @return bool
+     * @return bool|void
      */
     public function actionView($orderId)
     {
         if (!User::isGuest()) {
 
+            // Получаем id пользователя
+            $userId = User::getUserId();
+
             // Получаем полную информацию о заказе
-            $orders = parent::getOrderObj()->getOrderInfo($orderId);
+            $orders = self::getOrderObj()->getOrderInfo($userId, $orderId);
 
             if (!empty($orders)) {
+
+                //Титул страницы
+                $title = 'Заказ № ' . $orderId;
+
                 // Дата и время заказа.
                 $created = $orders[0]['created'];
-                // Подключаем вид
-                require_once(ROOT . '/views/order/view.php');
+
+                // Выводим
+                echo Templater::viewInclude(ROOT . '/views/order/view.php',
+                    [
+                        'title' => $title,
+                        'orderId' => $orderId,
+                        'orders' => $orders,
+                        'created' => $created
+                    ]
+                );
                 return true;
-            } else {
-                parent::showError('Такого заказа не существует');
-            }
-        } else {
-            parent::showError('Необходимо войти на сайт');
-        }
+            } else return self::showError('Такого заказа не существует');
+        } else return self::showError('Необходимо войти на сайт');
     }
 }
