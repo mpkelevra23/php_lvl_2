@@ -64,6 +64,7 @@ DROP VIEW lesson_7.order_info;
 DROP TABLE lesson_7.order_status;
 DROP SEQUENCE lesson_7.order_id_seq;
 DROP TABLE lesson_7."order";
+DROP VIEW lesson_7.goods_list;
 DROP SEQUENCE lesson_7.goods_id_seq;
 DROP TABLE lesson_7.goods;
 DROP SEQUENCE lesson_7.categories_id_seq;
@@ -92,7 +93,7 @@ CREATE TABLE lesson_7.basket (
     id integer NOT NULL,
     id_user integer NOT NULL,
     id_good integer NOT NULL,
-    price real NOT NULL,
+    price numeric(10,2) NOT NULL,
     is_in_order boolean DEFAULT false NOT NULL,
     id_order integer
 );
@@ -164,10 +165,12 @@ ALTER SEQUENCE lesson_7.categories_id_seq OWNED BY lesson_7.categories.id;
 CREATE TABLE lesson_7.goods (
     id integer NOT NULL,
     name character varying NOT NULL,
-    price double precision NOT NULL,
+    price numeric(10,2) NOT NULL,
     id_category integer NOT NULL,
-    status integer,
-    description character varying(256)
+    description character varying(2056),
+    img_address character varying(256) NOT NULL,
+    img_thumb_address character varying(256) NOT NULL,
+    status boolean DEFAULT true NOT NULL
 );
 
 
@@ -196,6 +199,26 @@ ALTER SEQUENCE lesson_7.goods_id_seq OWNED BY lesson_7.goods.id;
 
 
 --
+-- Name: goods_list; Type: VIEW; Schema: lesson_7; Owner: admin
+--
+
+CREATE VIEW lesson_7.goods_list AS
+ SELECT goods.id,
+    goods.name,
+    goods.price,
+    goods.img_thumb_address,
+    goods.img_address,
+    categories.name AS category,
+    goods.status,
+    goods.description
+   FROM (lesson_7.goods
+     JOIN lesson_7.categories ON ((goods.id_category = categories.id)))
+  ORDER BY goods.id;
+
+
+ALTER TABLE lesson_7.goods_list OWNER TO admin;
+
+--
 -- Name: order; Type: TABLE; Schema: lesson_7; Owner: admin
 --
 
@@ -204,7 +227,7 @@ CREATE TABLE lesson_7."order" (
     id_user integer NOT NULL,
     created timestamp without time zone NOT NULL,
     id_order_status integer DEFAULT 1 NOT NULL,
-    total_price double precision NOT NULL
+    total_price numeric(10,2) NOT NULL
 );
 
 
@@ -249,8 +272,10 @@ ALTER TABLE lesson_7.order_status OWNER TO admin;
 --
 
 CREATE VIEW lesson_7.order_info AS
- SELECT "order".id AS order_id,
+ SELECT "order".id_user AS user_id,
+    "order".id AS order_id,
     goods.id AS goods_id,
+    order_status.id AS status_id,
     "order".created,
     basket.price,
     order_status.name AS status,
@@ -284,10 +309,12 @@ ALTER TABLE lesson_7.users OWNER TO admin;
 
 CREATE VIEW lesson_7.order_list AS
  SELECT "order".id,
+    users.id AS user_id,
     users.name AS user_name,
     users.email AS user_email,
     "order".created,
     "order".total_price,
+    order_status.id AS status_id,
     order_status.name AS status
    FROM ((lesson_7."order"
      JOIN lesson_7.users ON (("order".id_user = users.id)))
@@ -464,165 +491,6 @@ ALTER TABLE ONLY lesson_7.user_role ALTER COLUMN id SET DEFAULT nextval('lesson_
 --
 
 ALTER TABLE ONLY lesson_7.users ALTER COLUMN id SET DEFAULT nextval('lesson_7.users_id_seq'::regclass);
-
-
---
--- Data for Name: basket; Type: TABLE DATA; Schema: lesson_7; Owner: admin
---
-
-COPY lesson_7.basket (id, id_user, id_good, price, is_in_order, id_order) FROM stdin;
-79	20	1	9999	t	49
-80	20	2	7999	t	50
-81	20	5	21999	t	50
-82	21	5	21999	t	51
-83	21	4	11999	t	52
-84	21	2	7999	t	53
-85	21	7	15999	t	53
-86	20	2	7999	t	54
-87	20	1	9999	t	55
-88	21	5	21999	f	\N
-\.
-
-
---
--- Data for Name: categories; Type: TABLE DATA; Schema: lesson_7; Owner: admin
---
-
-COPY lesson_7.categories (id, status, name) FROM stdin;
-1	1	phones
-2	1	laptops
-\.
-
-
---
--- Data for Name: goods; Type: TABLE DATA; Schema: lesson_7; Owner: admin
---
-
-COPY lesson_7.goods (id, name, price, id_category, status, description) FROM stdin;
-2	miphone	7999	1	1	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-1	iphone	9999	1	1	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-3	nokia	4999	1	0	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-4	pixel	11999	1	1	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-5	macbook	21999	2	1	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-6	surface	11999	2	0	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-7	minotebook	15999	2	1	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-\.
-
-
---
--- Data for Name: order; Type: TABLE DATA; Schema: lesson_7; Owner: admin
---
-
-COPY lesson_7."order" (id, id_user, created, id_order_status, total_price) FROM stdin;
-50	20	2019-11-28 19:34:02	3	29998
-53	21	2019-11-28 20:01:35	4	23998
-54	20	2019-11-29 20:46:19	4	7999
-52	21	2019-11-28 20:01:16	2	11999
-55	20	2019-12-11 21:27:19	3	9999
-49	20	2019-11-28 19:31:58	1	9999
-51	21	2019-11-28 20:01:05	1	21999
-\.
-
-
---
--- Data for Name: order_status; Type: TABLE DATA; Schema: lesson_7; Owner: admin
---
-
-COPY lesson_7.order_status (id, name) FROM stdin;
-1	В работе
-2	Отгружен со склада
-3	В пути
-4	Доставлен
-\.
-
-
---
--- Data for Name: role; Type: TABLE DATA; Schema: lesson_7; Owner: admin
---
-
-COPY lesson_7.role (id, role_name) FROM stdin;
-2	admin
-1	user
-\.
-
-
---
--- Data for Name: user_role; Type: TABLE DATA; Schema: lesson_7; Owner: admin
---
-
-COPY lesson_7.user_role (id, id_user, id_role) FROM stdin;
-18	20	1
-19	21	1
-20	22	1
-22	20	2
-\.
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: lesson_7; Owner: admin
---
-
-COPY lesson_7.users (id, name, email, password, last_actions) FROM stdin;
-22	kelevra25	kelevra25@gmail.com	$2y$10$Xy8aFAN6HY.T4Q24x6pZy.HrlrTuOEOCe3W3fzRWluNSAeqhNnFFK	a:4:{i:0;s:7:"cabinet";i:1;s:0:"";i:2;s:12:"goods/view/2";i:3;s:11:"user/logout";}
-21	kelevra24	kelevra24@gmail.com	$2y$10$ZmIL8HOajn3aQqJCDf.XnuNlsv9c0OLOepaqS/bdYzigyp1fBxGOi	a:5:{i:0;s:12:"goods/view/7";i:1;s:6:"basket";i:2;s:12:"order/create";i:3;s:0:"";i:4;s:11:"user/logout";}
-20	kelevra23	kelevra23@gmail.com	$2y$10$fMLS8ii2qdHlsssyQ/.SEuI/T6UTXhkf6kZFTdNswybpMO5I7yhXy	a:5:{i:0;s:7:"cabinet";i:1;s:10:"order/list";i:2;s:13:"order/view/49";i:3;s:0:"";i:4;s:11:"user/logout";}
-\.
-
-
---
--- Name: basket_id_seq; Type: SEQUENCE SET; Schema: lesson_7; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_7.basket_id_seq', 88, true);
-
-
---
--- Name: categories_id_seq; Type: SEQUENCE SET; Schema: lesson_7; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_7.categories_id_seq', 2, true);
-
-
---
--- Name: goods_id_seq; Type: SEQUENCE SET; Schema: lesson_7; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_7.goods_id_seq', 7, true);
-
-
---
--- Name: order_id_seq; Type: SEQUENCE SET; Schema: lesson_7; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_7.order_id_seq', 55, true);
-
-
---
--- Name: order_status_id_seq; Type: SEQUENCE SET; Schema: lesson_7; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_7.order_status_id_seq', 4, true);
-
-
---
--- Name: role_id_seq; Type: SEQUENCE SET; Schema: lesson_7; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_7.role_id_seq', 2, true);
-
-
---
--- Name: user_role_id_seq; Type: SEQUENCE SET; Schema: lesson_7; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_7.user_role_id_seq', 22, true);
-
-
---
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: lesson_7; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_7.users_id_seq', 22, true);
 
 
 --
@@ -818,7 +686,7 @@ ALTER TABLE ONLY lesson_7."order"
 --
 
 ALTER TABLE ONLY lesson_7."order"
-    ADD CONSTRAINT order_users_id_fk FOREIGN KEY (id_user) REFERENCES lesson_7.users(id);
+    ADD CONSTRAINT order_users_id_fk FOREIGN KEY (id_user) REFERENCES lesson_7.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

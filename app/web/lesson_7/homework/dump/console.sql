@@ -1,4 +1,4 @@
--- Файл для импорта триггера
+-- Файл для импорта триггеров и видов
 -- Удаляем функцию
 DROP FUNCTION update_basket();
 
@@ -48,8 +48,10 @@ CREATE TRIGGER tr_add_user_role
 
 -- Создаём вид order_info
 CREATE VIEW lesson_7.order_info AS
-SELECT lesson_7.order.id          AS order_id,
+SELECT lesson_7.order.id_user     AS user_id,
+       lesson_7.order.id          AS order_id,
        lesson_7.goods.id          AS goods_id,
+       lesson_7.order_status.id   AS status_id,
        lesson_7.order.created,
        lesson_7.basket.price,
        lesson_7.order_status.name AS status,
@@ -65,11 +67,13 @@ DROP VIEW lesson_7.order_info;
 -- Создаём вид order_list
 CREATE VIEW lesson_7.order_list AS
 SELECT lesson_7.order.id          AS id,
-       users.name                 AS user_name,
-       users.email                AS user_email,
+       lesson_7.users.id          AS user_id,
+       lesson_7.users.name        AS user_name,
+       lesson_7.users.email       AS user_email,
        lesson_7.order.created     AS created,
        lesson_7.order.total_price AS total_price,
-       order_status.name          AS status
+       lesson_7.order_status.id   AS status_id,
+       lesson_7.order_status.name AS status
 FROM lesson_7.order
          INNER JOIN lesson_7.users ON lesson_7.order.id_user = lesson_7.users.id
          INNER JOIN lesson_7.order_status ON lesson_7.order.id_order_status = lesson_7.order_status.id
@@ -77,3 +81,20 @@ ORDER BY lesson_7.order.id DESC;
 
 -- Удаляем вид order_list
 DROP VIEW lesson_7.order_list;
+
+-- Создаём вид goods_list
+CREATE VIEW lesson_7.goods_list AS
+SELECT lesson_7.goods.id                AS id,
+       lesson_7.goods.name              AS name,
+       lesson_7.goods.price             AS price,
+       lesson_7.goods.img_thumb_address AS img_thumb_address,
+       lesson_7.goods.img_address       AS img_address,
+       lesson_7.categories.name         AS category,
+       lesson_7.goods.status            AS status,
+       lesson_7.goods.description       AS description
+FROM lesson_7.goods
+         INNER JOIN lesson_7.categories ON lesson_7.goods.id_category = lesson_7.categories.id
+ORDER BY lesson_7.goods.id;
+
+-- Удаляем вид goods_list
+DROP VIEW lesson_7.goods_list;
