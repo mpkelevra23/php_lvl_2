@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Класс для работы с корзиной пользователя
+ * Model для работы с корзиной пользователя
  * Class Basket
  */
-class Basket extends BaseModel
+class Basket
 {
     /**
      * Добавляем товар в корзину пользователя
@@ -15,7 +15,7 @@ class Basket extends BaseModel
      */
     public function addGoodsInBasket($userId, $goodsId, $price)
     {
-        return parent::getDbh()->run('INSERT INTO lesson_7.basket (id_user, id_good, price) VALUES (:userId, :goodsId, :price)', [$userId, $goodsId, $price]);
+        return Db::getInstance()->run('INSERT INTO lesson_7.basket (id_user, id_good, price) VALUES (:userId, :goodsId, :price)', [$userId, $goodsId, $price]);
     }
 
     /**
@@ -25,7 +25,7 @@ class Basket extends BaseModel
      */
     public function getGoodsFromBasket($userId)
     {
-        return parent::getDbh()->run('SELECT * FROM lesson_7.basket INNER JOIN lesson_7.goods ON basket.id_good = goods.id WHERE id_user = :id_user AND is_in_order = false', [$userId])->fetchAll();
+        return Db::getInstance()->run('SELECT basket.id AS basket_id, name, goods.price FROM lesson_7.basket INNER JOIN lesson_7.goods ON basket.id_good = goods.id WHERE id_user = :userId AND is_in_order = false', [$userId])->fetchAll();
     }
 
     /**
@@ -36,7 +36,7 @@ class Basket extends BaseModel
      */
     public function checkGoodsExistsInBasket($goodsId, $userId)
     {
-        return parent::getDbh()->run('SELECT count(id) FROM lesson_7.basket WHERE id_good = :id_good AND id_user = :id_user AND is_in_order = false', [$goodsId, $userId])->fetchColumn();
+        return Db::getInstance()->run('SELECT count(id) FROM lesson_7.basket WHERE id_good = :goodsId AND id_user = :userId AND is_in_order = false', [$goodsId, $userId])->fetchColumn();
     }
 
     /**
@@ -46,7 +46,7 @@ class Basket extends BaseModel
      */
     public function getTotalPrice($userId)
     {
-        return parent::getDbh()->run('SELECT SUM(price) FROM lesson_7.basket WHERE id_user = :id_user AND is_in_order = false', [$userId])->fetch();
+        return Db::getInstance()->run('SELECT SUM(price) FROM lesson_7.basket WHERE id_user = :userId AND is_in_order = false', [$userId])->fetchColumn();
     }
 
     /**
@@ -56,6 +56,17 @@ class Basket extends BaseModel
      */
     public function checkBasketEmpty($userId)
     {
-        return parent::getDbh()->run('SELECT count(id) FROM lesson_7.basket WHERE id_user = :id_user AND is_in_order = false', [$userId])->fetchColumn();
+        return Db::getInstance()->run('SELECT count(id) FROM lesson_7.basket WHERE id_user = :userId AND is_in_order = false', [$userId])->fetchColumn();
+    }
+
+    /**
+     * Удаляем товар из корзины
+     * @param $userId
+     * @param $basketId
+     * @return bool|false|PDOStatement
+     */
+    public function deleteFromBasket($userId, $basketId)
+    {
+        return Db::getInstance()->run('DELETE FROM lesson_7.basket WHERE id_user = :userId AND id = :basketId', [$userId, $basketId])->rowCount();
     }
 }
