@@ -1,7 +1,11 @@
 <?php require_once ROOT . '/views/layouts/header.php'; ?>
 
-<div class="content">
-    <h1>Заказ оформлен</h1>
-</div>
+    <div class="content">
+        <span class="caption"><?= $title ?></span>
+        <div class="success">
+            <p><b>Заказ успешно оформмлен</b></p>
+            <p><a href="/order">Полный список заказов</a></p>
+        </div>
+    </div>
 
 <?php require_once ROOT . '/views/layouts/footer.php'; ?>

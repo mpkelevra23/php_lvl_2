@@ -1,9 +1,11 @@
 <?php require_once ROOT . '/views/layouts/admin_header.php'; ?>
 
     <div class="content">
-        <h1>Админпанель</h1>
-
-        <a href="/admin/order">Заказы</a>
+        <span class="caption"><?= $title ?></span>
+        <div class="admin">
+            <p><a href="/admin/order">Список заказов</a></p>
+            <p><a href="/admin/goods">Список товаров</a></p>
+        </div>
     </div>
 
 <?php require_once ROOT . '/views/layouts/admin_footer.php'; ?>

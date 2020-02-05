@@ -6,17 +6,26 @@
 }
 
 body {
-    background-color: #cdcdcd;
+    background-color: #F4F4F4;
 }
 
 a {
     text-decoration: none;
     outline: none;
+    color: #000000;
+    transition: color .5s;
+}
+
+a:visited {
+    color: #000000;
+}
+
+a:hover {
+    color: #ff5309;
 }
 
 .container {
     max-width: 1200px;
-    width: auto;
     margin: 0 auto;
 }
 
@@ -28,22 +37,14 @@ a {
     border-bottom: 2px solid black;
 }
 
-.link {
-    display: block;
-    height: 100px;
-    width: 100px;
-    padding: 0 0 0 30px;
-}
-
-.logo {
-    height: 100px;
-    /*background: url("../img/nike_logo.png") center / contain no-repeat;*/
-}
-
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 500px) {
     .menu {
         width: 200px;
     }
+}
+
+ul.menu {
+    margin: auto;
 }
 
 .menu li {
@@ -66,18 +67,10 @@ a {
     letter-spacing: 2px;
     position: relative;
     margin: 0 30px 0 30px;
-    font-size: 20px;
+    font-size: 15px;
     text-transform: uppercase;
     display: inline-block;
     transition: color .5s;
-}
-
-.menu a, .menu a:visited {
-    color: #000000;
-}
-
-.menu a:hover {
-    color: #ff5309;
 }
 
 .menu a:before,
@@ -103,49 +96,227 @@ a {
 
 .content {
     min-height: calc(100vh - 200px);
+    max-width: 1200px;
 }
 
-input[type="text"], input[type="email"], textarea {
+.caption {
+    font-family: 'Comfortaa', cursive;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 15px;
+    display: block;
+    width: auto;
+    padding: 20px 0;
+    border-bottom: 2px solid #000000;
+}
+
+.profile_info,
+.orders_list,
+.position a,
+.create,
+.update,
+.description,
+.info_picture,
+.login,
+.registration,
+.orders,
+.error_message {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    margin: 15px 15px;
+    padding: 15px 15px;
+    color: #000000;
+}
+
+.description {
+    max-width: 500px;
+    justify-content: space-around;
+}
+
+select,
+.profile p,
+.orders p,
+.success p,
+.goods,
+.order,
+.order p,
+.basket,
+.admin p,
+.admin_orders,
+.create,
+.update,
+.description p,
+.position p,
+.login,
+.registration,
+.error_message p {
+    font-family: 'Comfortaa', cursive;
+    font-size: 15px;
+    margin: 10px;
+    text-align: center;
+}
+
+.profile_info p, .orders_list p {
+    text-align: left;
+}
+
+.description .short_description {
+    font-size: 12px;
+    color: #707070;
+    line-height: 16px;
+    text-align: left;
+}
+
+.create, .update, .description {
+    text-align: center;
+}
+
+.position p {
+    text-transform: uppercase;
+}
+
+select {
+    outline: none;
+    border: 2px solid black;
+    border-radius: 25px;
+    background: transparent;
+    min-width: 200px;
+    min-height: 20px;
+    margin: 5px;
+    padding: 5px;
+}
+
+select:hover {
+    color: #F4F4F4;
+    background-color: black;
+    transition: .5s;
+}
+
+.position, .profile, .success, .goods, .order, .basket, .admin, .admin_orders, .info {
+    justify-content: space-around;
+    display: flex;
+    width: auto;
+    margin: 15px 15px;
+    flex-wrap: wrap;
+}
+
+.order, .basket, .create, .login, .registration, .orders {
+    flex-direction: column;
+    align-content: space-around;
+    align-items: center;
+}
+
+.position a {
+    height: 300px;
+    width: 300px;
+    align-items: center;
+}
+
+.position a:hover {
+    color: #ff5309;
+    transition: .5s;
+}
+
+.picture, .admin_good_picture, .description_picture {
+    height: 200px;
+    width: 200px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+}
+
+.position a:hover img, .picture:hover, .admin_good_picture:hover, .description_picture:hover {
+    border: 2px solid #ff5309;
+    transition: .5s;
+}
+
+.admin_good_picture, .description_picture {
+    cursor: zoom-in;
+}
+
+.description_picture {
+    width: 300px;
+    height: 300px;
+}
+
+.description .price {
+    font-family: 'Comfortaa', cursive;
+    font-size: 15px;
+    color: #000000;
+}
+
+button {
+    margin: 15px;
+    outline: none;
+    font-family: 'Comfortaa', cursive;
+    border: 1px solid black;
+    padding: 15px 50px;
+    color: black;
+    background-color: transparent;
+    text-transform: uppercase;
+    border-radius: 25px;
+}
+
+button:hover {
+    margin: 15px;
+    color: #F4F4F4;
+    background-color: black;
+    transition: .5s;
+}
+
+input[type="text"], input[type="email"], input[type="password"], textarea {
+    outline: none;
+    font-family: 'Comfortaa', cursive;
+    margin: 10px auto;
     display: block;
     padding: 5px;
-    color: #484343;
-    outline: none;
     border: 1px solid black;
     border-radius: 5px;
 }
 
-input[type="text"], input[type="email"] {
+input[type="text"], input[type="email"], input[type="password"] {
     width: 350px;
     height: 20px;
-    color: #484343;
 }
 
-input[type="text"] {
-    text-transform: capitalize;
-}
-
-input[type="email"]:focus {
-    color: #484343;
-    background-color: #cac4c4;
+input[type="file"] {
+    width: 200px;
+    height: auto;
+    outline: none;
+    font-family: 'Comfortaa', cursive;
+    margin: 10px auto;
+    display: block;
+    padding: 5px;
 }
 
 textarea {
-    text-transform: capitalize;
     width: 350px;
     height: 150px;
 }
 
 input[type="submit"] {
-    width: 100px;
-    height: 30px;
+    margin: 15px;
+    outline: none;
+    font-family: 'Comfortaa', cursive;
     border: 1px solid black;
-    border-radius: 5px;
+    padding: 15px 50px;
+    color: black;
+    background-color: transparent;
+    text-transform: uppercase;
+    border-radius: 25px;
+}
+
+input[type="submit"]:hover {
+    margin: 15px;
+    color: #F4F4F4;
+    background-color: black;
+    transition: .5s;
 }
 
 footer {
     height: 100px;
     background-color: #191919;
-    color: white;
+    color: #F4F4F4;
 }
 
 .footer {
@@ -166,26 +337,37 @@ footer {
     margin-right: 25px;
 }
 
-
 table {
-    width: 500px; /* Ширина таблицы */
-    border: 3px solid black; /* Рамка вокруг таблицы */
-    border-collapse: collapse; /* Отображать только одинарные линии */
-}
-
-th {
-    text-align: left; /* Выравнивание по левому краю */
-    background: #ccc; /* Цвет фона ячеек */
-    padding: 5px; /* Поля вокруг содержимого ячеек */
-    border: 3px solid black; /* Граница вокруг ячеек */
-}
-
-td {
-    padding: 5px; /* Поля вокруг содержимого ячеек */
-    border: 3px solid black; /* Граница вокруг ячеек */
+    margin: 15px 0;
+    border: 2px solid black;
+    border-collapse: collapse;
+    vertical-align: middle;
+    text-align: center;
 }
 
 thead {
     font-weight: bold;
-    text-align: center; /* Выравнивание по левому краю */
+}
+
+th {
+    border: 2px solid black;
+}
+
+td {
+    padding: 10px;
+    width: auto;
+    height: auto;
+    border: 2px solid black;
+}
+
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+.done {
+    color: #328019;
+}
+
+.error {
+    color: #cd262b;
 }

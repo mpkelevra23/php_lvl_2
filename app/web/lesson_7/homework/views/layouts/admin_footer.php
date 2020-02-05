@@ -1,7 +1,18 @@
+</div>
 <footer>
     <div class="footer">
-        <p>2019</p>
+        <p>&copy; <?= date('Y') ?> Nike, Inc. Все права защищены</p>
     </div>
 </footer>
+<script type="text/javascript" src="/lesson_7/homework/template/js/jquery.js"></script>
+<script>
+    function changeStatus(id) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/order/ajaxUpdate",
+            data: {orderStatusParams: id},
+        });
+    }
+</script>
 </body>
 </html>

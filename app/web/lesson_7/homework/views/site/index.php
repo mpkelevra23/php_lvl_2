@@ -1,14 +1,15 @@
 <?php require_once ROOT . '/views/layouts/header.php'; ?>
 
-<h1>Главная страница сайта</h1>
-
-<div class="content">
-    <?php foreach ($goods as $product): ?>
-        <div>
-            <a href="goods/view/<?= $product['id']; ?>"><p><?= $product['name']; ?></p></a>
-            <p><?= $product['price']; ?></p>
+    <div class="content">
+        <span class="caption">Каталог</span>
+        <div class="position">
+            <?php foreach ($goods as $good): ?>
+                <a href="goods/view/<?= $good['id']; ?>"><p><?= $good['name']; ?></p>
+                    <img class="picture" src="/<?= $good['img_thumb_address']; ?>" alt="<?= $good['name']; ?>">
+                    <p><?= $good['price']; ?> &#x20bd;</p>
+                </a>
+            <?php endforeach; ?>
         </div>
-    <?php endforeach; ?>
-</div>
+    </div>
 
 <?php require_once ROOT . '/views/layouts/footer.php'; ?>

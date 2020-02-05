@@ -5,15 +5,13 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/lesson_6/homework/template/css/style.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="/lesson_7/homework/template/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa|Russo+One" rel="stylesheet">
+    <title><?= $title ?></title>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <a class="link" href="/">
-            <div class="logo">Home</div>
-        </a>
         <ul class="menu">
             <li><a href="/">Главная</a></li>
             <?php if (User::isGuest()): ?>
