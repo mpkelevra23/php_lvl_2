@@ -1,18 +1,44 @@
 <?php
 
 /**
+ * Model для работы с товаром
  * Class Goods
- * Класс для работы с товаром
  */
-class Goods extends BaseModel
+class Goods
 {
+
+    /**
+     * Добавляем новый товар
+     * @param $name
+     * @param $price
+     * @param $id_category
+     * @param $imgAddress
+     * @param $imgThumbAddress
+     * @param bool $status
+     * @param null $description
+     * @return bool|false|PDOStatement
+     */
+    public function addNewGood($name, $price, $id_category, $imgAddress, $imgThumbAddress, $status = true, $description = null)
+    {
+        return Db::getInstance()->run('INSERT INTO lesson_7.goods(name, price, id_category, img_address, img_thumb_address, status, description) VALUES (:name, :price, :id_category, :imgAddress, :imgThumbAddress, :status, :description)', [$name, $price, $id_category, $imgAddress, $imgThumbAddress, $status, $description]);
+    }
+
     /**
      * Получаем массив товаров со статусом = 1
      * @return array
      */
     public function getGoodsList()
     {
-        return parent::getDbh()->run('SELECT id, name, price FROM lesson_7.goods WHERE status = 1')->fetchAll();
+        return Db::getInstance()->run('SELECT id, name, price, img_thumb_address FROM lesson_7.goods WHERE status = true')->fetchAll();
+    }
+
+    /**
+     * Получаем массив всех товаров
+     * @return array
+     */
+    public function getAllGoodsList()
+    {
+        return Db::getInstance()->run('SELECT * FROM lesson_7.goods_list')->fetchAll();
     }
 
     /**
@@ -20,8 +46,69 @@ class Goods extends BaseModel
      * @param $goodId
      * @return mixed
      */
-    public function getGoodsById($goodId)
+    public function getGoodById($goodId)
     {
-        return parent::getDbh()->run('SELECT * FROM lesson_7.goods WHERE status = 1 AND id = :id', [$goodId])->fetch();
+        return Db::getInstance()->run('SELECT * FROM lesson_7.goods WHERE id = :goodsId', [$goodId])->fetch();
+    }
+
+    /**
+     * Получаем список категорий товаров
+     * @return array
+     */
+    public function getCategoryList()
+    {
+        return Db::getInstance()->run('SELECT id, name FROM lesson_7.categories')->fetchAll();
+    }
+
+    /**
+     * Изменяем данные о товаре
+     * @param $goodId
+     * @param $name
+     * @param $price
+     * @param $categoryId
+     * @param $status
+     * @param $description
+     * @param $imgAddress
+     * @param $imgThumbAddress
+     * @return mixed
+     */
+    public function updateGood($goodId, $name, $price, $categoryId, $status, $description, $imgAddress, $imgThumbAddress)
+    {
+        return Db::getInstance()->run('UPDATE lesson_7.goods SET name = :name, price = :price, id_category = :categoryId, status = :status, description = :description, img_address = :imgAddress, img_thumb_address = :imgThumbAddress WHERE id = :goodId', [$name, $price, $categoryId, $status, $description, $imgAddress, $imgThumbAddress, $goodId])->rowCount();
+    }
+
+    /**
+     * @param $goodsId
+     * @return bool|false|PDOStatement
+     */
+    public function deleteGood($goodsId)
+    {
+        return Db::getInstance()->run('DELETE FROM lesson_7.goods WHERE id = :goodsId', [$goodsId])->rowCount();
+    }
+
+    /**
+     * Проверям цену
+     * @param $price
+     * @return bool
+     */
+    public function checkPrice($price)
+    {
+        if (is_float($price) && $price >= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Проверяем существует ли товар с таким наименованием в бд
+     * @param $name
+     * @return bool
+     */
+    public function checkGoodExists($name)
+    {
+        if (Db::getInstance()->run('SELECT COUNT(*) FROM lesson_7.goods WHERE name = :name', [$name])->fetchColumn()) {
+            return true;
+        }
+        return false;
     }
 }
