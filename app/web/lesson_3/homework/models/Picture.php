@@ -29,7 +29,7 @@ class Picture
         } elseif ($type == 'image/jpeg' ||
             $type == 'image/png' ||
             $type == 'image/gif') {
-            $file = Transfer::translate((basename($name)));
+            $file = Transfer::translate(basename($name));
             $address = './data/img/' . $file;
             $thumbAddress = './data/thumb/' . $file;
 
