@@ -4,6 +4,12 @@
   },
   "require": {
     "ext-pdo": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "ext-memcache": "*",
+    "ext-memcached": "*",
+    "ext-simplexml": "*",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "ext-soap": "*"
   }
 }
