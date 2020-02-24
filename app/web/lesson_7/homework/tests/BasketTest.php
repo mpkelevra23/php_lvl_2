@@ -107,7 +107,6 @@ class BasketTest extends TestCase
      */
     public function testDeleteFromBasket($basketId)
     {
-        var_dump($basketId);
         self::assertSame(1, $this->fixture->deleteFromBasket(1, $basketId));
     }
 }
