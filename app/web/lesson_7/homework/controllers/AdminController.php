@@ -21,11 +21,11 @@ class AdminController extends AdminBase
                 $title = 'Админка';
 
                 // Выводим
-                echo Templater::viewInclude(ROOT . '/views/admin/index.php',
+                echo Templater::viewInclude('/views/admin/index.php',
                     ['title' => $title]
                 );
                 return true;
-            } else return self::showError('Отказ в доступе');
-        } else return self::showError('Необходимо войти на сайт');
+            } else self::showError('Отказ в доступе');
+        } else self::showError('Необходимо войти на сайт');
     }
 }

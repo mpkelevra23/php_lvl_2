@@ -20,7 +20,7 @@ class Goods
      */
     public function addNewGood($name, $price, $id_category, $imgAddress, $imgThumbAddress, $status = true, $description = null)
     {
-        return Db::getInstance()->run('INSERT INTO lesson_7.goods(name, price, id_category, img_address, img_thumb_address, status, description) VALUES (:name, :price, :id_category, :imgAddress, :imgThumbAddress, :status, :description)', [$name, $price, $id_category, $imgAddress, $imgThumbAddress, $status, $description]);
+        return Db::getInstance()->run('INSERT INTO  lesson_7.goods(name, price, id_category, img_address, img_thumb_address, status, description) VALUES (:name, :price, :id_category, :imgAddress, :imgThumbAddress, :status, :description)', [$name, $price, $id_category, $imgAddress, $imgThumbAddress, $status, $description]);
     }
 
     /**

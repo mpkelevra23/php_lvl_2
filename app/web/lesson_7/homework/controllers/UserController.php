@@ -54,7 +54,7 @@ class UserController extends BaseController
         $title = 'Регистрация';
 
         // Выводим
-        echo Templater::viewInclude(ROOT . '/views/user/registration.php',
+        echo Templater::viewInclude('/views/user/registration.php',
             [
                 'title' => $title,
                 'errors' => $errors,
@@ -116,7 +116,7 @@ class UserController extends BaseController
         $title = 'Вход';
 
         // Выводим
-        echo Templater::viewInclude(ROOT . '/views/user/login.php',
+        echo Templater::viewInclude('/views/user/login.php',
             [
                 'title' => $title,
                 'errors' => $errors,

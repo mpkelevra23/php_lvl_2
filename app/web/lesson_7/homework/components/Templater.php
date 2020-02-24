@@ -4,7 +4,7 @@
  * Component для контроля вывода
  * Class Templater
  */
-class Templater
+final class Templater
 {
     public static function viewInclude($file, $params = [])
     {
@@ -15,7 +15,7 @@ class Templater
 
         // Генерация HTML в строку.
         ob_start();
-        require_once $file;
+        require_once ROOT . $file;
         return ob_get_clean();
     }
 }

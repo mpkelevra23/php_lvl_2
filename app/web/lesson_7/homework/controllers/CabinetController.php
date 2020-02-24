@@ -34,7 +34,7 @@ class CabinetController extends BaseController
                 $lastActions = array_slice($_SESSION['last_actions'], -5, 5);
 
                 // Выводим
-                echo Templater::viewInclude(ROOT . '/views/cabinet/index.php',
+                echo Templater::viewInclude('/views/cabinet/index.php',
                     [
                         'title' => $title,
                         'user' => $user,
@@ -44,6 +44,6 @@ class CabinetController extends BaseController
                 );
                 return true;
             }
-        } else return self::showError('Необходимо войти на сайт');
+        } else self::showError('Необходимо войти на сайт');
     }
 }

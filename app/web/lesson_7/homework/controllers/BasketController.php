@@ -28,7 +28,7 @@ class BasketController extends BaseController
             $totalPrice = self::getBasketObj()->getTotalPrice($userId);
 
             // Выводим
-            echo Templater::viewInclude(ROOT . '/views/basket/index.php',
+            echo Templater::viewInclude('/views/basket/index.php',
                 [
                     'title' => $title,
                     'goods' => $goods,
@@ -37,7 +37,7 @@ class BasketController extends BaseController
             );
             return true;
             // Подключаем вид
-        } else return self::showError('Необходимо войти на сайт');
+        } else self::showError('Необходимо войти на сайт');
     }
 
     /**
@@ -66,14 +66,13 @@ class BasketController extends BaseController
                 // Возвращаем пользователя на страницу
                 $referrer = $_SERVER['HTTP_REFERER'];
                 header("Location: $referrer");
-            } else return self::showError('Данные товар уже добавлен в корзину');
-        } else return self::showError('Необходимо войти на сайт');
+            } else self::showError('Данные товар уже добавлен в корзину');
+        } else self::showError('Необходимо войти на сайт');
     }
 
     /**
      * Удаляем товар из корзины
      * @param $basketId
-     * @return bool
      */
     public function actionDelete($basketId)
     {
@@ -85,7 +84,7 @@ class BasketController extends BaseController
             if (self::getBasketObj()->deleteFromBasket($userId, $basketId) == 1) {
                 // Обновляем страницу
                 header("Location: /basket/index");
-            } else return self::showError('Ошибка удаления товара');
-        } else return self::showError('Необходимо войти на сайт');
+            } else self::showError('Ошибка удаления товара');
+        } else self::showError('Необходимо войти на сайт');
     }
 }

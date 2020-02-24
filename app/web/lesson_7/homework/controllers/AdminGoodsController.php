@@ -24,15 +24,15 @@ class AdminGoodsController extends AdminBase
                 $title = 'Товары';
 
                 // Выводим
-                echo Templater::viewInclude(ROOT . '/views/admin/goods/index.php',
+                echo Templater::viewInclude('/views/admin/goods/index.php',
                     [
                         'title' => $title,
                         'goodsList' => $goodsList
                     ]
                 );
                 return true;
-            } else return self::showError('Отказ в доступе');
-        } else return self::showError('Необходимо войти на сайт');
+            } else self::showError('Отказ в доступе');
+        } else self::showError('Необходимо войти на сайт');
     }
 
     /**
@@ -97,7 +97,7 @@ class AdminGoodsController extends AdminBase
                                 header("Location: /admin/goods/");
                             }
                         }
-                    } else echo Templater::viewInclude(ROOT . '/views/admin/goods/create.php',
+                    } else echo Templater::viewInclude('/views/admin/goods/create.php',
                         [
                             'title' => $title,
                             'categoryList' => $categoryList,
@@ -110,15 +110,15 @@ class AdminGoodsController extends AdminBase
                         ]
                     );
                     return true;
-                } else echo Templater::viewInclude(ROOT . '/views/admin/goods/create.php',
+                } else echo Templater::viewInclude('/views/admin/goods/create.php',
                     [
                         'title' => $title,
                         'categoryList' => $categoryList,
                     ]
                 );
                 return true;
-            } else return self::showError('Отказ в доступе');
-        } else return self::showError('Необходимо войти на сайт');
+            } else self::showError('Отказ в доступе');
+        } else self::showError('Необходимо войти на сайт');
     }
 
     /**
@@ -207,7 +207,7 @@ class AdminGoodsController extends AdminBase
                         if (self::getGoodsObj()->updateGood($goodId, $name, $price, $categoryId, $status, $description, $imgAddress, $imgThumbAddress) == 1) {
                             header("Location: /admin/goods/");
                         }
-                    } else echo Templater::viewInclude(ROOT . '/views/admin/goods/update.php',
+                    } else echo Templater::viewInclude('/views/admin/goods/update.php',
                         [
                             'title' => $title,
                             'categoryList' => $categoryList,
@@ -222,7 +222,7 @@ class AdminGoodsController extends AdminBase
                         ]
                     );
                     return true;
-                } else echo Templater::viewInclude(ROOT . '/views/admin/goods/update.php',
+                } else echo Templater::viewInclude('/views/admin/goods/update.php',
                     [
                         'title' => $title,
                         'categoryList' => $categoryList,
@@ -236,14 +236,14 @@ class AdminGoodsController extends AdminBase
                     ]
                 );
                 return true;
-            } else return self::showError('Отказ в доступе');
-        } else return self::showError('Необходимо войти на сайт');
+            } else self::showError('Отказ в доступе');
+        } else self::showError('Необходимо войти на сайт');
     }
 
     /**
      * Удаляем товар
      * @param $goodId
-     * @return bool
+     * @return bool|void
      */
     public function actionDelete($goodId)
     {
@@ -262,8 +262,8 @@ class AdminGoodsController extends AdminBase
                         // Обновляем страницу
                         header("Location: /admin/goods/index");
                     }
-                } else return self::showError('Ошибка удаления товара');
-            } else return self::showError('Отказ в доступе');
-        } else return self::showError('Необходимо войти на сайт');
+                } else self::showError('Ошибка удаления товара');
+            } else self::showError('Отказ в доступе');
+        } else self::showError('Необходимо войти на сайт');
     }
 }

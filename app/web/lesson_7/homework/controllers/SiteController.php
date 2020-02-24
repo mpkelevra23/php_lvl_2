@@ -20,7 +20,7 @@ class SiteController extends BaseController
         $goods = self::getGoodsObj()->getGoodsList();
 
         // Выводим
-        echo Templater::viewInclude(ROOT . '/views/site/index.php',
+        echo Templater::viewInclude('/views/site/index.php',
             [
                 'title' => $title,
                 'goods' => $goods
@@ -43,7 +43,7 @@ class SiteController extends BaseController
 
         // Выводим ошибку
         if (!empty($error)) {
-            return self::showError($error);
+            self::showError($error);
         }
         return false;
     }

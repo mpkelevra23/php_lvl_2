@@ -19,13 +19,13 @@ class GoodsController extends BaseController
             //Титул страницы
             $title = $good['name'];
             // Выводим
-            echo Templater::viewInclude(ROOT . '/views/goods/view.php',
+            echo Templater::viewInclude('/views/goods/view.php',
                 [
                     'title' => $title,
                     'good' => $good
                 ]
             );
             return true;
-        } else return self::showError('Такого товара не существует');
+        } else self::showError('Такого товара не существует');
     }
 }

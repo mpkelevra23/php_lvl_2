@@ -4,10 +4,10 @@
  * Class Db
  * Компонент для работы с базой данных
  */
-class Db
+final class Db
 {
     // Переменная для хранения экземпляра класса
-    private static $instance;
+    private static $instance = null;
 
     // Переменная для хранения экземпляра PDO
     private $pdo;
@@ -36,14 +36,16 @@ class Db
         }
     }
 
-    private function __sleep()
-    {
-    }
-
+    /**
+     * Запрет на сериализацию объекта (для паттерна Singleton)
+     */
     private function __wakeup()
     {
     }
 
+    /**
+     * Запрет на клонирование объекта (для паттерна Singleton)
+     */
     private function __clone()
     {
     }
@@ -52,12 +54,9 @@ class Db
      * Метод проверки существования объекта класса Db, и для доступа к свойствам и методам класса Db
      * @return Db
      */
-    public static function getInstance()
+    public static function getInstance(): Db
     {
-        if (empty(self::$instance)) {
-            self::$instance = new self;
-        }
-        return self::$instance;
+        return self::$instance ?? (self::$instance = new self());
     }
 
     /**
