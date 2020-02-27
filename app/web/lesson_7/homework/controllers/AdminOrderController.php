@@ -85,7 +85,7 @@ class AdminOrderController extends AdminBase
 
     /**
      * Меняем статус заказа
-     * @return bool
+     * @return bool|void
      */
     public function actionAjaxUpdate()
     {

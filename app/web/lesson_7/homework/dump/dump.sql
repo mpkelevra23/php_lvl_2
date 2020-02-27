@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
--- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
+-- Dumped from database version 10.12 (Ubuntu 10.12-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 10.12 (Ubuntu 10.12-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -71,6 +71,8 @@ DROP SEQUENCE lesson_7.categories_id_seq;
 DROP TABLE lesson_7.categories;
 DROP SEQUENCE lesson_7.basket_id_seq;
 DROP TABLE lesson_7.basket;
+DROP FUNCTION lesson_7.update_basket();
+DROP FUNCTION lesson_7.add_user_role();
 DROP SCHEMA lesson_7;
 --
 -- Name: lesson_7; Type: SCHEMA; Schema: -; Owner: admin
@@ -80,6 +82,39 @@ CREATE SCHEMA lesson_7;
 
 
 ALTER SCHEMA lesson_7 OWNER TO admin;
+
+--
+-- Name: add_user_role(); Type: FUNCTION; Schema: lesson_7; Owner: admin
+--
+
+CREATE FUNCTION lesson_7.add_user_role() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    INSERT INTO lesson_7.user_role (id_user, id_role) VALUES (NEW.id, 1);
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION lesson_7.add_user_role() OWNER TO admin;
+
+--
+-- Name: update_basket(); Type: FUNCTION; Schema: lesson_7; Owner: admin
+--
+
+CREATE FUNCTION lesson_7.update_basket() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    UPDATE lesson_7.basket SET id_order = NEW.id WHERE id_user = NEW.id_user AND is_in_order = false;
+    UPDATE lesson_7.basket SET is_in_order = true WHERE id_order = NEW.id;
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION lesson_7.update_basket() OWNER TO admin;
 
 SET default_tablespace = '';
 
@@ -631,14 +666,14 @@ CREATE UNIQUE INDEX users_id_uindex ON lesson_7.users USING btree (id);
 -- Name: users tr_add_user_role; Type: TRIGGER; Schema: lesson_7; Owner: admin
 --
 
-CREATE TRIGGER tr_add_user_role AFTER INSERT ON lesson_7.users FOR EACH ROW EXECUTE PROCEDURE public.add_user_role();
+CREATE TRIGGER tr_add_user_role AFTER INSERT ON lesson_7.users FOR EACH ROW EXECUTE PROCEDURE lesson_7.add_user_role();
 
 
 --
 -- Name: order tr_update_basket; Type: TRIGGER; Schema: lesson_7; Owner: admin
 --
 
-CREATE TRIGGER tr_update_basket AFTER INSERT ON lesson_7."order" FOR EACH ROW EXECUTE PROCEDURE public.update_basket();
+CREATE TRIGGER tr_update_basket AFTER INSERT ON lesson_7."order" FOR EACH ROW EXECUTE PROCEDURE lesson_7.update_basket();
 
 
 --

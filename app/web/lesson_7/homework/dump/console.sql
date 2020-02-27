@@ -1,15 +1,15 @@
 -- Файл для импорта триггеров и видов
--- Удаляем функцию
-DROP FUNCTION update_basket();
+-- Удаляем функцию (чтобы удалить функцию, надо сначала удалить зависимый от неё триггер)
+DROP FUNCTION lesson_7.update_basket();
 
 -- Создаём функцию для добавления id заказа в корзину и изменения статуса товара в корзине
-CREATE OR REPLACE FUNCTION update_basket() RETURNS TRIGGER
-              AS
-              $$
+CREATE OR REPLACE FUNCTION lesson_7.update_basket() RETURNS TRIGGER
+AS
+$$
 BEGIN
-UPDATE lesson_7.basket SET id_order = NEW.id WHERE id_user = NEW.id_user AND is_in_order = false;
-UPDATE lesson_7.basket SET is_in_order = true WHERE id_order = NEW.id;
-RETURN NEW;
+    UPDATE lesson_7.basket SET id_order = NEW.id WHERE id_user = NEW.id_user AND is_in_order = false;
+    UPDATE lesson_7.basket SET is_in_order = true WHERE id_order = NEW.id;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -21,18 +21,18 @@ CREATE TRIGGER tr_update_basket
     AFTER INSERT
     ON lesson_7."order"
     FOR EACH ROW
-    EXECUTE PROCEDURE update_basket();
+EXECUTE PROCEDURE lesson_7.update_basket();
 
--- Удаляем функцию
-DROP FUNCTION add_user_role();
+-- Удаляем функцию (чтобы удалить функцию, надо сначала удалить зависимый от неё триггер)
+DROP FUNCTION lesson_7.add_user_role();
 
 -- Создаём функцию для добавления id пользователя в таблицу user_role ()
-CREATE OR REPLACE FUNCTION add_user_role() RETURNS TRIGGER
-              AS
-              $$
+CREATE OR REPLACE FUNCTION lesson_7.add_user_role() RETURNS TRIGGER
+AS
+$$
 BEGIN
-INSERT INTO lesson_7.user_role (id_user, id_role) VALUES (NEW.id, 1);
-RETURN NEW;
+    INSERT INTO lesson_7.user_role (id_user, id_role) VALUES (NEW.id, 1);
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -44,7 +44,7 @@ CREATE TRIGGER tr_add_user_role
     AFTER INSERT
     ON lesson_7.users
     FOR EACH ROW
-    EXECUTE PROCEDURE add_user_role();
+EXECUTE PROCEDURE lesson_7.add_user_role();
 
 -- Создаём вид order_info
 CREATE VIEW lesson_7.order_info AS
