@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
--- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
+-- Dumped from database version 10.12 (Ubuntu 10.12-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 10.12 (Ubuntu 10.12-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -70,6 +70,8 @@ DROP SEQUENCE lesson_6.categories_id_seq;
 DROP TABLE lesson_6.categories;
 DROP SEQUENCE lesson_6.basket_id_seq;
 DROP TABLE lesson_6.basket;
+DROP FUNCTION lesson_6.update_basket();
+DROP FUNCTION lesson_6.add_user_role();
 DROP SCHEMA lesson_6;
 --
 -- Name: lesson_6; Type: SCHEMA; Schema: -; Owner: admin
@@ -79,6 +81,39 @@ CREATE SCHEMA lesson_6;
 
 
 ALTER SCHEMA lesson_6 OWNER TO admin;
+
+--
+-- Name: add_user_role(); Type: FUNCTION; Schema: lesson_6; Owner: admin
+--
+
+CREATE FUNCTION lesson_6.add_user_role() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    INSERT INTO lesson_6.user_role (id_user, id_role) VALUES (NEW.id, 1);
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION lesson_6.add_user_role() OWNER TO admin;
+
+--
+-- Name: update_basket(); Type: FUNCTION; Schema: lesson_6; Owner: admin
+--
+
+CREATE FUNCTION lesson_6.update_basket() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    UPDATE lesson_6.basket SET id_order = NEW.id WHERE id_user = NEW.id_user AND is_in_order = false;
+    UPDATE lesson_6.basket SET is_in_order = true WHERE id_order = NEW.id;
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION lesson_6.update_basket() OWNER TO admin;
 
 SET default_tablespace = '';
 
@@ -467,165 +502,6 @@ ALTER TABLE ONLY lesson_6.users ALTER COLUMN id SET DEFAULT nextval('lesson_6.us
 
 
 --
--- Data for Name: basket; Type: TABLE DATA; Schema: lesson_6; Owner: admin
---
-
-COPY lesson_6.basket (id, id_user, id_good, price, is_in_order, id_order) FROM stdin;
-79	20	1	9999	t	49
-80	20	2	7999	t	50
-81	20	5	21999	t	50
-82	21	5	21999	t	51
-83	21	4	11999	t	52
-84	21	2	7999	t	53
-85	21	7	15999	t	53
-86	20	2	7999	t	54
-87	20	1	9999	t	55
-88	21	5	21999	f	\N
-\.
-
-
---
--- Data for Name: categories; Type: TABLE DATA; Schema: lesson_6; Owner: admin
---
-
-COPY lesson_6.categories (id, status, name) FROM stdin;
-1	1	phones
-2	1	laptops
-\.
-
-
---
--- Data for Name: goods; Type: TABLE DATA; Schema: lesson_6; Owner: admin
---
-
-COPY lesson_6.goods (id, name, price, id_category, status, description) FROM stdin;
-2	miphone	7999	1	1	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-1	iphone	9999	1	1	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-3	nokia	4999	1	0	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-4	pixel	11999	1	1	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-5	macbook	21999	2	1	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-6	surface	11999	2	0	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-7	minotebook	15999	2	1	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolores fuga fugit incidunt ipsum iure iusto, laborum libero magnam maxime natus, nesciunt numquam porro possimus quisquam ratione rem repudiandae sed.
-\.
-
-
---
--- Data for Name: order; Type: TABLE DATA; Schema: lesson_6; Owner: admin
---
-
-COPY lesson_6."order" (id, id_user, created, id_order_status, total_price) FROM stdin;
-50	20	2019-11-28 19:34:02	3	29998
-53	21	2019-11-28 20:01:35	4	23998
-54	20	2019-11-29 20:46:19	4	7999
-52	21	2019-11-28 20:01:16	2	11999
-55	20	2019-12-11 21:27:19	3	9999
-49	20	2019-11-28 19:31:58	1	9999
-51	21	2019-11-28 20:01:05	1	21999
-\.
-
-
---
--- Data for Name: order_status; Type: TABLE DATA; Schema: lesson_6; Owner: admin
---
-
-COPY lesson_6.order_status (id, name) FROM stdin;
-1	В работе
-2	Отгружен со склада
-3	В пути
-4	Доставлен
-\.
-
-
---
--- Data for Name: role; Type: TABLE DATA; Schema: lesson_6; Owner: admin
---
-
-COPY lesson_6.role (id, role_name) FROM stdin;
-2	admin
-1	user
-\.
-
-
---
--- Data for Name: user_role; Type: TABLE DATA; Schema: lesson_6; Owner: admin
---
-
-COPY lesson_6.user_role (id, id_user, id_role) FROM stdin;
-18	20	1
-19	21	1
-20	22	1
-22	20	2
-\.
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: lesson_6; Owner: admin
---
-
-COPY lesson_6.users (id, name, email, password, last_actions) FROM stdin;
-22	kelevra25	kelevra25@gmail.com	$2y$10$Xy8aFAN6HY.T4Q24x6pZy.HrlrTuOEOCe3W3fzRWluNSAeqhNnFFK	a:4:{i:0;s:7:"cabinet";i:1;s:0:"";i:2;s:12:"goods/view/2";i:3;s:11:"user/logout";}
-21	kelevra24	kelevra24@gmail.com	$2y$10$ZmIL8HOajn3aQqJCDf.XnuNlsv9c0OLOepaqS/bdYzigyp1fBxGOi	a:5:{i:0;s:12:"goods/view/7";i:1;s:6:"basket";i:2;s:12:"order/create";i:3;s:0:"";i:4;s:11:"user/logout";}
-20	kelevra23	kelevra23@gmail.com	$2y$10$fMLS8ii2qdHlsssyQ/.SEuI/T6UTXhkf6kZFTdNswybpMO5I7yhXy	a:5:{i:0;s:7:"cabinet";i:1;s:10:"order/list";i:2;s:13:"order/view/49";i:3;s:0:"";i:4;s:11:"user/logout";}
-\.
-
-
---
--- Name: basket_id_seq; Type: SEQUENCE SET; Schema: lesson_6; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_6.basket_id_seq', 88, true);
-
-
---
--- Name: categories_id_seq; Type: SEQUENCE SET; Schema: lesson_6; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_6.categories_id_seq', 2, true);
-
-
---
--- Name: goods_id_seq; Type: SEQUENCE SET; Schema: lesson_6; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_6.goods_id_seq', 7, true);
-
-
---
--- Name: order_id_seq; Type: SEQUENCE SET; Schema: lesson_6; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_6.order_id_seq', 55, true);
-
-
---
--- Name: order_status_id_seq; Type: SEQUENCE SET; Schema: lesson_6; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_6.order_status_id_seq', 4, true);
-
-
---
--- Name: role_id_seq; Type: SEQUENCE SET; Schema: lesson_6; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_6.role_id_seq', 2, true);
-
-
---
--- Name: user_role_id_seq; Type: SEQUENCE SET; Schema: lesson_6; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_6.user_role_id_seq', 22, true);
-
-
---
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: lesson_6; Owner: admin
---
-
-SELECT pg_catalog.setval('lesson_6.users_id_seq', 22, true);
-
-
---
 -- Name: basket basket_pk; Type: CONSTRAINT; Schema: lesson_6; Owner: admin
 --
 
@@ -763,14 +639,14 @@ CREATE UNIQUE INDEX users_id_uindex ON lesson_6.users USING btree (id);
 -- Name: users tr_add_user_role; Type: TRIGGER; Schema: lesson_6; Owner: admin
 --
 
-CREATE TRIGGER tr_add_user_role AFTER INSERT ON lesson_6.users FOR EACH ROW EXECUTE PROCEDURE public.add_user_role();
+CREATE TRIGGER tr_add_user_role AFTER INSERT ON lesson_6.users FOR EACH ROW EXECUTE PROCEDURE lesson_6.add_user_role();
 
 
 --
 -- Name: order tr_update_basket; Type: TRIGGER; Schema: lesson_6; Owner: admin
 --
 
-CREATE TRIGGER tr_update_basket AFTER INSERT ON lesson_6."order" FOR EACH ROW EXECUTE PROCEDURE public.update_basket();
+CREATE TRIGGER tr_update_basket AFTER INSERT ON lesson_6."order" FOR EACH ROW EXECUTE PROCEDURE lesson_6.update_basket();
 
 
 --
