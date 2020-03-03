@@ -26,28 +26,16 @@ final class Db
         $dsn = "{$params['dbms']}:host={$params['host']};port={$params['port']};dbname={$params['dbname']}";
 
         try {
-            $this->pdo = new PDO($dsn, $params['user'], $params['password'], [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            ]);
+            $this->pdo = new PDO(
+                $dsn, $params['user'], $params['password'], [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    ]
+            );
         } catch (PDOException $e) {
             print "<b>Ошибка соединения!:</b><br> " . $e->getMessage() . "<br>";
             die();
         }
-    }
-
-    /**
-     * Запрет на сериализацию объекта (для паттерна Singleton)
-     */
-    private function __wakeup()
-    {
-    }
-
-    /**
-     * Запрет на клонирование объекта (для паттерна Singleton)
-     */
-    private function __clone()
-    {
     }
 
     /**
@@ -57,6 +45,14 @@ final class Db
     public static function getInstance(): Db
     {
         return self::$instance ?? (self::$instance = new self());
+    }
+
+    /**
+     * Закрываем соединение с БД
+     */
+    public static function closeDbh()
+    {
+        self::$instance = null;
     }
 
     /**
@@ -92,10 +88,16 @@ final class Db
     }
 
     /**
-     * Закрываем соединение с БД
+     * Запрет на сериализацию объекта (для паттерна Singleton)
      */
-    public static function closeDbh()
+    private function __wakeup()
     {
-        self::$instance = null;
+    }
+
+    /**
+     * Запрет на клонирование объекта (для паттерна Singleton)
+     */
+    private function __clone()
+    {
     }
 }

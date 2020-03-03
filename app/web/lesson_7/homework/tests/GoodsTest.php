@@ -10,19 +10,6 @@ class GoodsTest extends TestCase
     protected static $dbh;
     protected $fixture;
 
-    public function setUp(): void
-    {
-        $this->fixture = new Goods();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->fixture = null;
-    }
-
-    /*
-     * Создаю и удаляю записи в БД для работы тесто (ничего умнее не придумал)
-     */
     public static function setUpBeforeClass(): void
     {
         self::$dbh = Db::getInstance();
@@ -33,13 +20,24 @@ class GoodsTest extends TestCase
         self::$dbh = null;
     }
 
+    /*
+     * Создаю и удаляю записи в БД для работы тесто (ничего умнее не придумал)
+     */
+
+    public function setUp(): void
+    {
+        $this->fixture = new Goods();
+    }
+
     /**
      * @covers Goods::addNewGood
      * @return mixed
      */
     public function testAddNewGood()
     {
-        self::assertNotEmpty($this->fixture->addNewGood('test', 123456, 1, '/upload/img', '/upload/thumb', true, 'qwerty'));
+        self::assertNotEmpty(
+            $this->fixture->addNewGood('test', 123456, 1, '/upload/img', '/upload/thumb', true, 'qwerty')
+        );
         return self::$dbh->lastInsertId('admin.lesson_7.goods_id_seq');
     }
 
@@ -81,7 +79,19 @@ class GoodsTest extends TestCase
      */
     public function testUpdateGood($goodId)
     {
-        self::assertSame(1, $this->fixture->updateGood($goodId, 'qwerty', 654321, 1, true, 'qwerty', '/upload/img', '/upload/thumb'));
+        self::assertSame(
+            1,
+            $this->fixture->updateGood(
+                $goodId,
+                'qwerty',
+                654321,
+                1,
+                true,
+                'qwerty',
+                '/upload/img',
+                '/upload/thumb'
+            )
+        );
     }
 
     /**
@@ -120,5 +130,10 @@ class GoodsTest extends TestCase
     public function testCheckGoodExists()
     {
         self::assertTrue($this->fixture->checkGoodExists('test'));
+    }
+
+    protected function tearDown(): void
+    {
+        $this->fixture = null;
     }
 }

@@ -10,24 +10,15 @@ class BasketTest extends TestCase
     protected static $dbh;
     protected $fixture;
 
-    public function setUp(): void
-    {
-        $this->fixture = new Basket();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->fixture = null;
-    }
-
-    /*
-     * Создаю и удаляю записи в БД для работы тесто (ничего умнее не придумал)
-     */
     public static function setUpBeforeClass(): void
     {
         self::$dbh = Db::getInstance();
-        self::$dbh->run("INSERT INTO lesson_7.users(id, name, email, password) VALUES (1, 'test', 'test@test.com', 123456)");
-        self::$dbh->run("INSERT INTO lesson_7.goods(id, name, price, id_category, img_address, img_thumb_address, status, description) VALUES (1, 'test', 123456, 1, '/upload/img', '/upload/thumb', true, 'qwerty')");
+        self::$dbh->run(
+            "INSERT INTO lesson_7.users(id, name, email, password) VALUES (1, 'test', 'test@test.com', 123456)"
+        );
+        self::$dbh->run(
+            "INSERT INTO lesson_7.goods(id, name, price, id_category, img_address, img_thumb_address, status, description) VALUES (1, 'test', 123456, 1, '/upload/img', '/upload/thumb', true, 'qwerty')"
+        );
     }
 
     public static function tearDownAfterClass(): void
@@ -35,6 +26,15 @@ class BasketTest extends TestCase
         self::$dbh->run("DELETE FROM lesson_7.goods WHERE id = 1");
         self::$dbh->run("DELETE FROM lesson_7.users WHERE id = 1");
         self::$dbh = null;
+    }
+
+    /*
+     * Создаю и удаляю записи в БД для работы тесто (ничего умнее не придумал)
+     */
+
+    public function setUp(): void
+    {
+        $this->fixture = new Basket();
     }
 
     /**
@@ -85,7 +85,6 @@ class BasketTest extends TestCase
     {
         self::assertIsInt($this->fixture->checkGoodsExistsInBasket($goodId, $userId));
         self::assertNotEmpty($this->fixture->checkGoodsExistsInBasket($goodId, $userId));
-
     }
 
     /**
@@ -108,5 +107,10 @@ class BasketTest extends TestCase
     public function testDeleteFromBasket($basketId)
     {
         self::assertSame(1, $this->fixture->deleteFromBasket(1, $basketId));
+    }
+
+    protected function tearDown(): void
+    {
+        $this->fixture = null;
     }
 }

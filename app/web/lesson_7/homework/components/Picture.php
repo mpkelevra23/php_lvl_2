@@ -28,12 +28,28 @@ class Picture
     }
 
     /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * @param $type
      * @return string
      */
     public function setType($type): string
     {
         return $this->type = (string)htmlspecialchars(strip_tags($type));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTmpName()
+    {
+        return $this->tmpName;
     }
 
     /**
@@ -46,12 +62,28 @@ class Picture
     }
 
     /**
+     * @return mixed
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
      * @param $size
      * @return int
      */
     public function setSize($size): int
     {
         return $this->size = (int)htmlspecialchars(strip_tags($size));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getError()
+    {
+        return $this->error;
     }
 
     /**
@@ -64,12 +96,28 @@ class Picture
     }
 
     /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * @param $name
      * @return string
      */
     public function setName($name): string
     {
         return $this->name = (string)htmlspecialchars(strip_tags($name));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImgAddress()
+    {
+        return $this->imgAddress;
     }
 
     /**
@@ -82,63 +130,6 @@ class Picture
     }
 
     /**
-     * @param $imgThumbAddress
-     * @return string
-     */
-    public function setImgThumbAddress($imgThumbAddress): string
-    {
-        return $this->imgThumbAddress = $imgThumbAddress;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTmpName()
-    {
-        return $this->tmpName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSize()
-    {
-        return $this->size;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getError()
-    {
-        return $this->error;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getImgAddress()
-    {
-        return $this->imgAddress;
-    }
-
-    /**
      * @return mixed
      */
     public function getImgThumbAddress()
@@ -146,6 +137,14 @@ class Picture
         return $this->imgThumbAddress;
     }
 
+    /**
+     * @param $imgThumbAddress
+     * @return string
+     */
+    public function setImgThumbAddress($imgThumbAddress): string
+    {
+        return $this->imgThumbAddress = $imgThumbAddress;
+    }
 
     /**
      * Сохраняем изображение
@@ -160,7 +159,13 @@ class Picture
         if (is_uploaded_file($this->tmpName)) {
             if (move_uploaded_file($this->tmpName, self::ADDRESS . $this->name)) {
                 // Если аватар изображения успешно создан, то сохраняем пути
-                if (self::createThumb(200, 200, self::ADDRESS . $this->name, self::THUMB_ADDRESS . $this->name, $this->type)) {
+                if (self::createThumb(
+                    200,
+                    200,
+                    self::ADDRESS . $this->name,
+                    self::THUMB_ADDRESS . $this->name,
+                    $this->type
+                )) {
                     // Адрес изображения
                     $this->setImgAddress(self::ADDRESS . $this->name);
                     // Адрес аватарки
@@ -170,42 +175,6 @@ class Picture
                 return false;
             }
             return false;
-        }
-        return false;
-    }
-
-    /**
-     * Проверям наличие ошибок
-     * @return bool
-     */
-    public function checkError()
-    {
-        if ($this->error == 0) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Проверяем размер изображения
-     * @return bool
-     */
-    public function checkSize()
-    {
-        if ($this->size <= 10000000) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Проверяем тип изображения
-     * @return bool
-     */
-    public function checkType()
-    {
-        if ($this->type == 'image/jpeg' || $this->type == 'image/png' || $this->type == 'image/gif') {
-            return true;
         }
         return false;
     }
@@ -242,6 +211,42 @@ class Picture
                 imagegif($newimg, $newsrc);
                 return true;
                 break;
+        }
+        return false;
+    }
+
+    /**
+     * Проверям наличие ошибок
+     * @return bool
+     */
+    public function checkError()
+    {
+        if ($this->error == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Проверяем размер изображения
+     * @return bool
+     */
+    public function checkSize()
+    {
+        if ($this->size <= 10000000) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Проверяем тип изображения
+     * @return bool
+     */
+    public function checkType()
+    {
+        if ($this->type == 'image/jpeg' || $this->type == 'image/png' || $this->type == 'image/gif') {
+            return true;
         }
         return false;
     }

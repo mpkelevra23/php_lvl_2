@@ -1,4 +1,5 @@
 <?php
+
 // Преобразуеь правильно сформированный XML-документ в объект класса SimpleXMLElement.
 $movies = simplexml_load_file('/var/www/php_lvl_2.local/app/web/lesson_8/practice/xml/info.xml');
 

@@ -15,7 +15,10 @@ class Basket
      */
     public function addGoodsInBasket($userId, $goodsId, $price)
     {
-        return Db::getInstance()->run('INSERT INTO lesson_7.basket (id_user, id_good, price) VALUES (:userId, :goodsId, :price)', [$userId, $goodsId, $price]);
+        return Db::getInstance()->run(
+            'INSERT INTO lesson_7.basket (id_user, id_good, price) VALUES (:userId, :goodsId, :price)',
+            [$userId, $goodsId, $price]
+        );
     }
 
     /**
@@ -25,7 +28,10 @@ class Basket
      */
     public function getGoodsFromBasket($userId)
     {
-        return Db::getInstance()->run('SELECT basket.id AS basket_id, name, goods.price FROM lesson_7.basket INNER JOIN lesson_7.goods ON basket.id_good = goods.id WHERE id_user = :userId AND is_in_order = false', [$userId])->fetchAll();
+        return Db::getInstance()->run(
+            'SELECT basket.id AS basket_id, name, goods.price FROM lesson_7.basket INNER JOIN lesson_7.goods ON basket.id_good = goods.id WHERE id_user = :userId AND is_in_order = false',
+            [$userId]
+        )->fetchAll();
     }
 
     /**
@@ -36,7 +42,10 @@ class Basket
      */
     public function checkGoodsExistsInBasket($goodsId, $userId)
     {
-        return Db::getInstance()->run('SELECT count(id) FROM lesson_7.basket WHERE id_good = :goodsId AND id_user = :userId AND is_in_order = false', [$goodsId, $userId])->fetchColumn();
+        return Db::getInstance()->run(
+            'SELECT count(id) FROM lesson_7.basket WHERE id_good = :goodsId AND id_user = :userId AND is_in_order = false',
+            [$goodsId, $userId]
+        )->fetchColumn();
     }
 
     /**
@@ -46,7 +55,10 @@ class Basket
      */
     public function getTotalPrice($userId)
     {
-        return Db::getInstance()->run('SELECT SUM(price) FROM lesson_7.basket WHERE id_user = :userId AND is_in_order = false', [$userId])->fetchColumn();
+        return Db::getInstance()->run(
+            'SELECT SUM(price) FROM lesson_7.basket WHERE id_user = :userId AND is_in_order = false',
+            [$userId]
+        )->fetchColumn();
     }
 
     /**
@@ -56,7 +68,10 @@ class Basket
      */
     public function checkBasketEmpty($userId)
     {
-        return Db::getInstance()->run('SELECT count(id) FROM lesson_7.basket WHERE id_user = :userId AND is_in_order = false', [$userId])->fetchColumn();
+        return Db::getInstance()->run(
+            'SELECT count(id) FROM lesson_7.basket WHERE id_user = :userId AND is_in_order = false',
+            [$userId]
+        )->fetchColumn();
     }
 
     /**
@@ -67,6 +82,9 @@ class Basket
      */
     public function deleteFromBasket($userId, $basketId)
     {
-        return Db::getInstance()->run('DELETE FROM lesson_7.basket WHERE id_user = :userId AND id = :basketId', [$userId, $basketId])->rowCount();
+        return Db::getInstance()->run(
+            'DELETE FROM lesson_7.basket WHERE id_user = :userId AND id = :basketId',
+            [$userId, $basketId]
+        )->rowCount();
     }
 }

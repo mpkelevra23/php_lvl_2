@@ -16,7 +16,6 @@ class AdminOrderController extends AdminBase
         if (!User::isGuest()) {
             // Проверяем является ли пользователь администратором
             if (self::checkAdmin()) {
-
                 // Список возможных статусов у заказа
                 $orderStatus = self::getOrderObj()->getOrderStatusList();
                 // Список заказов
@@ -25,7 +24,8 @@ class AdminOrderController extends AdminBase
                 $title = 'Заказы';
 
                 // Выводим
-                echo Templater::viewInclude('/views/admin/order/index.php',
+                echo Templater::viewInclude(
+                    '/views/admin/order/index.php',
                     [
                         'title' => $title,
                         'orderStatus' => $orderStatus,
@@ -33,8 +33,12 @@ class AdminOrderController extends AdminBase
                     ]
                 );
                 return true;
-            } else self::showError('Отказ в доступе');
-        } else self::showError('Необходимо войти на сайт');
+            } else {
+                self::showError('Отказ в доступе');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 
     /**
@@ -61,7 +65,9 @@ class AdminOrderController extends AdminBase
                         if (self::getOrderObj()->updateOrderStatus($orderId, $statusId) == 1) {
                             // Обновляем страницу
                             header("Location: /admin/order/update/$orderId");
-                        } else self::showError('Ошибка обновления статуса');
+                        } else {
+                            self::showError('Ошибка обновления статуса');
+                        }
                     }
                     // Список возможных статусов у заказа
                     $orderStatus = self::getOrderObj()->getOrderStatusList();
@@ -70,7 +76,8 @@ class AdminOrderController extends AdminBase
                     $title = 'Заказ № ' . $orderId;
 
                     // Выводим
-                    echo Templater::viewInclude('/views/admin/order/update.php',
+                    echo Templater::viewInclude(
+                        '/views/admin/order/update.php',
                         [
                             'title' => $title,
                             'order' => $order,
@@ -78,9 +85,15 @@ class AdminOrderController extends AdminBase
                         ]
                     );
                     return true;
-                } else self::showError('Список заказов пуст');
-            } else self::showError('Отказ в доступе');
-        } else self::showError('Необходимо войти на сайт');
+                } else {
+                    self::showError('Список заказов пуст');
+                }
+            } else {
+                self::showError('Отказ в доступе');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 
     /**
@@ -98,8 +111,12 @@ class AdminOrderController extends AdminBase
                 // Меняем статус заказа
                 self::getOrderObj()->updateOrderStatus($orderStatusParam[0], $orderStatusParam[1]);
                 return true;
-            } else self::showError('Отказ в доступе');
-        } else self::showError('Необходимо войти на сайт');
+            } else {
+                self::showError('Отказ в доступе');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 
     /**
@@ -115,8 +132,14 @@ class AdminOrderController extends AdminBase
                 if (self::getOrderObj()->deleteOrder($orderId) == 1) {
                     // Обновляем страницу
                     header("Location: /admin/order/index");
-                } else self::showError('Ошибка удаления заказа');
-            } else self::showError('Отказ в доступе');
-        } else self::showError('Необходимо войти на сайт');
+                } else {
+                    self::showError('Ошибка удаления заказа');
+                }
+            } else {
+                self::showError('Отказ в доступе');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 }

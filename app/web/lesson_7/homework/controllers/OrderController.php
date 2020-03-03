@@ -14,13 +14,11 @@ class OrderController extends BaseController
     {
         // Проверяем является ли пользователь гостем
         if (!User::isGuest()) {
-
             // Получаем id пользователя
             $userId = User::getUserId();
 
             // Проверяем есть ли товар в корзине
             if (self::getBasketObj()->checkBasketEmpty($userId)) {
-
                 //Титул страницы
                 $title = 'Заказ оформлен';
 
@@ -34,12 +32,17 @@ class OrderController extends BaseController
                 self::getOrderObj()->addOrder($userId, $createdAt, $totalPrice);
 
                 // Выводим
-                echo Templater::viewInclude('/views/order/create.php',
+                echo Templater::viewInclude(
+                    '/views/order/create.php',
                     ['title' => $title]
                 );
                 return true;
-            } else self::showError('Корзина пуста');
-        } else self::showError('Необходимо войти на сайт');
+            } else {
+                self::showError('Корзина пуста');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 
     /**
@@ -49,7 +52,6 @@ class OrderController extends BaseController
     public function actionIndex()
     {
         if (!User::isGuest()) {
-
             // Получаем id пользователя
             $userId = User::getUserId();
 
@@ -60,14 +62,17 @@ class OrderController extends BaseController
             $title = 'Список заказов';
 
             // Выводим
-            echo Templater::viewInclude('/views/order/index.php',
+            echo Templater::viewInclude(
+                '/views/order/index.php',
                 [
                     'title' => $title,
                     'orders' => $orders
                 ]
             );
             return true;
-        } else self::showError('Надо войти в систему');
+        } else {
+            self::showError('Надо войти в систему');
+        }
     }
 
     /**
@@ -78,7 +83,6 @@ class OrderController extends BaseController
     public function actionView($orderId)
     {
         if (!User::isGuest()) {
-
             // Получаем id пользователя
             $userId = User::getUserId();
 
@@ -86,7 +90,6 @@ class OrderController extends BaseController
             $orders = self::getOrderObj()->getOrderInfo($userId, $orderId);
 
             if (!empty($orders)) {
-
                 //Титул страницы
                 $title = 'Заказ № ' . $orderId;
 
@@ -94,7 +97,8 @@ class OrderController extends BaseController
                 $created = $orders[0]['created'];
 
                 // Выводим
-                echo Templater::viewInclude('/views/order/view.php',
+                echo Templater::viewInclude(
+                    '/views/order/view.php',
                     [
                         'title' => $title,
                         'orderId' => $orderId,
@@ -103,7 +107,11 @@ class OrderController extends BaseController
                     ]
                 );
                 return true;
-            } else self::showError('Такого заказа не существует');
-        } else self::showError('Необходимо войти на сайт');
+            } else {
+                self::showError('Такого заказа не существует');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 }

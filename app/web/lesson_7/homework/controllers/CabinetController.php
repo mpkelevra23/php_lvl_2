@@ -14,7 +14,6 @@ class CabinetController extends BaseController
     {
         // Проверяем является ли пользователь гостем
         if (!User::isGuest()) {
-
             // Получаем id пользователя
             $userId = User::getUserId();
 
@@ -26,7 +25,6 @@ class CabinetController extends BaseController
 
             // Получаем 5 последних адресов, на которых был пользователь
             if (isset($_SESSION['last_actions']) && is_array($_SESSION['last_actions'])) {
-
                 //Титул страницы
                 $title = 'Личный кабинет';
 
@@ -34,7 +32,8 @@ class CabinetController extends BaseController
                 $lastActions = array_slice($_SESSION['last_actions'], -5, 5);
 
                 // Выводим
-                echo Templater::viewInclude('/views/cabinet/index.php',
+                echo Templater::viewInclude(
+                    '/views/cabinet/index.php',
                     [
                         'title' => $title,
                         'user' => $user,
@@ -44,6 +43,8 @@ class CabinetController extends BaseController
                 );
                 return true;
             }
-        } else self::showError('Необходимо войти на сайт');
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 }

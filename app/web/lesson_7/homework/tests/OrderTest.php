@@ -10,24 +10,15 @@ class OrderTest extends TestCase
     protected static $dbh;
     protected $fixture;
 
-    public function setUp(): void
-    {
-        $this->fixture = new Order();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->fixture = null;
-    }
-
-    /*
-     * Создаю и удаляю записи в БД для работы тесто (ничего умнее не придумал)
-     */
     public static function setUpBeforeClass(): void
     {
         self::$dbh = Db::getInstance();
-        self::$dbh->run("INSERT INTO lesson_7.users(id, name, email, password) VALUES (1, 'test', 'test@test.com', 123456)");
-        self::$dbh->run("INSERT INTO lesson_7.goods(id, name, price, id_category, img_address, img_thumb_address, status, description) VALUES (1, 'test', 123456, 1, '/upload/img', '/upload/thumb', true, 'qwerty')");
+        self::$dbh->run(
+            "INSERT INTO lesson_7.users(id, name, email, password) VALUES (1, 'test', 'test@test.com', 123456)"
+        );
+        self::$dbh->run(
+            "INSERT INTO lesson_7.goods(id, name, price, id_category, img_address, img_thumb_address, status, description) VALUES (1, 'test', 123456, 1, '/upload/img', '/upload/thumb', true, 'qwerty')"
+        );
         self::$dbh->run("INSERT INTO lesson_7.basket (id_user, id_good, price) VALUES (1, 1, 123456)");
     }
 
@@ -37,6 +28,15 @@ class OrderTest extends TestCase
         self::$dbh->run("DELETE FROM lesson_7.goods WHERE id = 1");
         self::$dbh->run("DELETE FROM lesson_7.users WHERE id = 1");
         self::$dbh = null;
+    }
+
+    /*
+     * Создаю и удаляю записи в БД для работы тесто (ничего умнее не придумал)
+     */
+
+    public function setUp(): void
+    {
+        $this->fixture = new Order();
     }
 
     /**
@@ -135,5 +135,10 @@ class OrderTest extends TestCase
     public function testDeleteOrder($orderId)
     {
         self::assertSame(1, $this->fixture->deleteOrder($orderId));
+    }
+
+    protected function tearDown(): void
+    {
+        $this->fixture = null;
     }
 }

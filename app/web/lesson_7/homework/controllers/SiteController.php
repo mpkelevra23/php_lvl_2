@@ -20,7 +20,8 @@ class SiteController extends BaseController
         $goods = self::getGoodsObj()->getGoodsList();
 
         // Выводим
-        echo Templater::viewInclude('/views/site/index.php',
+        echo Templater::viewInclude(
+            '/views/site/index.php',
             [
                 'title' => $title,
                 'goods' => $goods

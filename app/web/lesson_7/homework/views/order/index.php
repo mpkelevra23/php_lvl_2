@@ -8,7 +8,7 @@
                     <p>
                         <a href="/order/view/<?= $order['id']; ?>">Заказ №
                             <b><?= $order['id']; ?></b> от <i><?= $order['created']; ?></i></a>,
-                            <?php if ($order['status_id'] == 4): ?>
+                        <?php if ($order['status_id'] == 4): ?>
                             <span class="done"> <?= $order['status'] ?></span>
                         <?php else: ?>
                             <span> <?= $order['status'] ?></span>

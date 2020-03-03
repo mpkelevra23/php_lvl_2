@@ -73,7 +73,8 @@ abstract class BaseController
         $title = 'Ошибка';
 
         // Выводим
-        echo Templater::viewInclude('/views/site/error.php',
+        echo Templater::viewInclude(
+            '/views/site/error.php',
             [
                 'title' => $title,
                 'error' => $error

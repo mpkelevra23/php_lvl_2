@@ -7,25 +7,13 @@
 final class Storage
 {
     // Переменная для хранения экземпляра класса
-    private static $instance;
-
-    // Переменная для хранения класса Memcached
-    private $cache;
-
-    // Префикс для записей в Memcached (для того, чтобы отличить одни записи от других (Memcached на сервере един))
     private const PREFIX = 'project:';
 
-    private function __clone()
-    {
-    }
+    // Переменная для хранения класса Memcached
+    private static $instance;
 
-    private function __wakeup()
-    {
-    }
-
-    private function __sleep()
-    {
-    }
+    // Префикс для записей в Memcached (для того, чтобы отличить одни записи от других (Memcached на сервере един))
+    private $cache;
 
     /**
      * Storage constructor.
@@ -43,7 +31,6 @@ final class Storage
     {
         return self::$instance ?? (self::$instance = new self());
     }
-
 
     /**
      * @param $key
@@ -83,5 +70,17 @@ final class Storage
         } catch (MemcachedException $exception) {
             echo $exception->getMessage();
         }
+    }
+
+    private function __clone()
+    {
+    }
+
+    private function __wakeup()
+    {
+    }
+
+    private function __sleep()
+    {
     }
 }

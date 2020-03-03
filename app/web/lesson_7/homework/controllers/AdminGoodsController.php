@@ -16,7 +16,6 @@ class AdminGoodsController extends AdminBase
         if (!User::isGuest()) {
             // Проверяем является ли пользователь администратором
             if (self::checkAdmin()) {
-
                 // Список заказов
                 $goodsList = self::getGoodsObj()->getAllGoodsList();
 
@@ -24,15 +23,20 @@ class AdminGoodsController extends AdminBase
                 $title = 'Товары';
 
                 // Выводим
-                echo Templater::viewInclude('/views/admin/goods/index.php',
+                echo Templater::viewInclude(
+                    '/views/admin/goods/index.php',
                     [
                         'title' => $title,
                         'goodsList' => $goodsList
                     ]
                 );
                 return true;
-            } else self::showError('Отказ в доступе');
-        } else self::showError('Необходимо войти на сайт');
+            } else {
+                self::showError('Отказ в доступе');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 
     /**
@@ -52,7 +56,6 @@ class AdminGoodsController extends AdminBase
                 $title = 'Создать новый товар';
 
                 if (isset($_POST['submit'])) {
-
                     // Переменные для формы
                     $name = (string)htmlspecialchars(strip_tags($_POST['name']));
                     $price = (float)htmlspecialchars(strip_tags($_POST['price']));
@@ -68,7 +71,9 @@ class AdminGoodsController extends AdminBase
                     }
                     if (isset($_POST['description'])) {
                         $description = (string)htmlspecialchars(strip_tags($_POST['description']));
-                    } else $description = null;
+                    } else {
+                        $description = null;
+                    }
 
                     // Создаём объект класса Picture
                     $photo = new Picture(
@@ -93,32 +98,50 @@ class AdminGoodsController extends AdminBase
                     // Если ошибок нет, добавляем товар в бд
                     if (empty($errors)) {
                         if ($photo->save()) {
-                            if (self::getGoodsObj()->addNewGood($name, $price, $categoryId, $photo->getImgAddress(), $photo->getImgThumbAddress(), $status, $description)) {
+                            if (self::getGoodsObj()->addNewGood(
+                                $name,
+                                $price,
+                                $categoryId,
+                                $photo->getImgAddress(),
+                                $photo->getImgThumbAddress(),
+                                $status,
+                                $description
+                            )) {
                                 header("Location: /admin/goods/");
                             }
                         }
-                    } else echo Templater::viewInclude('/views/admin/goods/create.php',
+                    } else {
+                        echo Templater::viewInclude(
+                            '/views/admin/goods/create.php',
+                            [
+                                'title' => $title,
+                                'categoryList' => $categoryList,
+                                'errors' => $errors,
+                                'name' => $name,
+                                'price' => $price,
+                                'categoryId' => $categoryId,
+                                'status' => $status,
+                                'description' => $description,
+                            ]
+                        );
+                    }
+                    return true;
+                } else {
+                    echo Templater::viewInclude(
+                        '/views/admin/goods/create.php',
                         [
                             'title' => $title,
                             'categoryList' => $categoryList,
-                            'errors' => $errors,
-                            'name' => $name,
-                            'price' => $price,
-                            'categoryId' => $categoryId,
-                            'status' => $status,
-                            'description' => $description,
                         ]
                     );
-                    return true;
-                } else echo Templater::viewInclude('/views/admin/goods/create.php',
-                    [
-                        'title' => $title,
-                        'categoryList' => $categoryList,
-                    ]
-                );
+                }
                 return true;
-            } else self::showError('Отказ в доступе');
-        } else self::showError('Необходимо войти на сайт');
+            } else {
+                self::showError('Отказ в доступе');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 
     /**
@@ -166,7 +189,9 @@ class AdminGoodsController extends AdminBase
                     }
                     if (isset($_POST['description'])) {
                         $description = (string)htmlspecialchars(strip_tags($_POST['description']));
-                    } else $description = null;
+                    } else {
+                        $description = null;
+                    }
 
                     if (!empty($_FILES['photo']['tmp_name'])) {
                         // Создаём объект класса Picture
@@ -204,14 +229,42 @@ class AdminGoodsController extends AdminBase
 
                     // Если ошибок нет, добавляем товар в бд
                     if (empty($errors)) {
-                        if (self::getGoodsObj()->updateGood($goodId, $name, $price, $categoryId, $status, $description, $imgAddress, $imgThumbAddress) == 1) {
+                        if (self::getGoodsObj()->updateGood(
+                                $goodId,
+                                $name,
+                                $price,
+                                $categoryId,
+                                $status,
+                                $description,
+                                $imgAddress,
+                                $imgThumbAddress
+                            ) == 1) {
                             header("Location: /admin/goods/");
                         }
-                    } else echo Templater::viewInclude('/views/admin/goods/update.php',
+                    } else {
+                        echo Templater::viewInclude(
+                            '/views/admin/goods/update.php',
+                            [
+                                'title' => $title,
+                                'categoryList' => $categoryList,
+                                'errors' => $errors,
+                                'name' => $name,
+                                'price' => $price,
+                                'categoryId' => $categoryId,
+                                'status' => $status,
+                                'description' => $description,
+                                'imgAddress' => $imgAddress,
+                                'imgThumbAddress' => $imgThumbAddress,
+                            ]
+                        );
+                    }
+                    return true;
+                } else {
+                    echo Templater::viewInclude(
+                        '/views/admin/goods/update.php',
                         [
                             'title' => $title,
                             'categoryList' => $categoryList,
-                            'errors' => $errors,
                             'name' => $name,
                             'price' => $price,
                             'categoryId' => $categoryId,
@@ -221,23 +274,14 @@ class AdminGoodsController extends AdminBase
                             'imgThumbAddress' => $imgThumbAddress,
                         ]
                     );
-                    return true;
-                } else echo Templater::viewInclude('/views/admin/goods/update.php',
-                    [
-                        'title' => $title,
-                        'categoryList' => $categoryList,
-                        'name' => $name,
-                        'price' => $price,
-                        'categoryId' => $categoryId,
-                        'status' => $status,
-                        'description' => $description,
-                        'imgAddress' => $imgAddress,
-                        'imgThumbAddress' => $imgThumbAddress,
-                    ]
-                );
+                }
                 return true;
-            } else self::showError('Отказ в доступе');
-        } else self::showError('Необходимо войти на сайт');
+            } else {
+                self::showError('Отказ в доступе');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 
     /**
@@ -262,8 +306,14 @@ class AdminGoodsController extends AdminBase
                         // Обновляем страницу
                         header("Location: /admin/goods/index");
                     }
-                } else self::showError('Ошибка удаления товара');
-            } else self::showError('Отказ в доступе');
-        } else self::showError('Необходимо войти на сайт');
+                } else {
+                    self::showError('Ошибка удаления товара');
+                }
+            } else {
+                self::showError('Отказ в доступе');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 }

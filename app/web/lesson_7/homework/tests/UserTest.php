@@ -10,29 +10,27 @@ class UserTest extends TestCase
     protected static $dbh;
     protected $fixture;
 
-    public function setUp(): void
-    {
-        $this->fixture = new User();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->fixture = null;
-    }
-
-    /*
-     * Создаю и удаляю записи в БД для работы тесто (ничего умнее не придумал)
-     */
     public static function setUpBeforeClass(): void
     {
         self::$dbh = Db::getInstance();
-        self::$dbh->run("INSERT INTO lesson_7.users(id, name, email, password, last_actions) VALUES (1, 'test', 'test@test.com', 123456, 'a:5:{i:0;s:7:\"cabinet\";i:1;s:10:\"order/list\";i:2;s:13:\"order/view/56\";i:3;s:0:\"\";i:4;s:11:\"user/logout\";}')");
+        self::$dbh->run(
+            "INSERT INTO lesson_7.users(id, name, email, password, last_actions) VALUES (1, 'test', 'test@test.com', 123456, 'a:5:{i:0;s:7:\"cabinet\";i:1;s:10:\"order/list\";i:2;s:13:\"order/view/56\";i:3;s:0:\"\";i:4;s:11:\"user/logout\";}')"
+        );
     }
 
     public static function tearDownAfterClass(): void
     {
         self::$dbh->run("DELETE FROM lesson_7.users WHERE id = 1");
         self::$dbh = null;
+    }
+
+    /*
+     * Создаю и удаляю записи в БД для работы тесто (ничего умнее не придумал)
+     */
+
+    public function setUp(): void
+    {
+        $this->fixture = new User();
     }
 
     /**
@@ -143,7 +141,13 @@ class UserTest extends TestCase
      */
     public function testSaveLastActions($userId)
     {
-        self::assertSame(1, $this->fixture->saveLastActions($userId, 'a:5:{i:0;s:6:"basket";i:1;s:0:"";i:2;s:6:"basket";i:3;s:6:"basket";i:4;s:11:"user/logout";}'));
+        self::assertSame(
+            1,
+            $this->fixture->saveLastActions(
+                $userId,
+                'a:5:{i:0;s:6:"basket";i:1;s:0:"";i:2;s:6:"basket";i:3;s:6:"basket";i:4;s:11:"user/logout";}'
+            )
+        );
     }
 
     /**
@@ -174,5 +178,10 @@ class UserTest extends TestCase
     public function testDeleteUser($userId)
     {
         self::assertSame(1, $this->fixture->deleteUser($userId));
+    }
+
+    protected function tearDown(): void
+    {
+        $this->fixture = null;
     }
 }

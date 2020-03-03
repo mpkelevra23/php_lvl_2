@@ -16,16 +16,20 @@ class AdminController extends AdminBase
         if (!User::isGuest()) {
             // Проверяем является ли пользователь администратором
             if (self::checkAdmin()) {
-
                 //Титул страницы
                 $title = 'Админка';
 
                 // Выводим
-                echo Templater::viewInclude('/views/admin/index.php',
+                echo Templater::viewInclude(
+                    '/views/admin/index.php',
                     ['title' => $title]
                 );
                 return true;
-            } else self::showError('Отказ в доступе');
-        } else self::showError('Необходимо войти на сайт');
+            } else {
+                self::showError('Отказ в доступе');
+            }
+        } else {
+            self::showError('Необходимо войти на сайт');
+        }
     }
 }

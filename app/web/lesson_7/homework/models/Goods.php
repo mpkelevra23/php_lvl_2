@@ -18,9 +18,19 @@ class Goods
      * @param null $description
      * @return bool|false|PDOStatement
      */
-    public function addNewGood($name, $price, $id_category, $imgAddress, $imgThumbAddress, $status = true, $description = null)
-    {
-        return Db::getInstance()->run('INSERT INTO  lesson_7.goods(name, price, id_category, img_address, img_thumb_address, status, description) VALUES (:name, :price, :id_category, :imgAddress, :imgThumbAddress, :status, :description)', [$name, $price, $id_category, $imgAddress, $imgThumbAddress, $status, $description]);
+    public function addNewGood(
+        $name,
+        $price,
+        $id_category,
+        $imgAddress,
+        $imgThumbAddress,
+        $status = true,
+        $description = null
+    ) {
+        return Db::getInstance()->run(
+            'INSERT INTO  lesson_7.goods(name, price, id_category, img_address, img_thumb_address, status, description) VALUES (:name, :price, :id_category, :imgAddress, :imgThumbAddress, :status, :description)',
+            [$name, $price, $id_category, $imgAddress, $imgThumbAddress, $status, $description]
+        );
     }
 
     /**
@@ -29,7 +39,9 @@ class Goods
      */
     public function getGoodsList()
     {
-        return Db::getInstance()->run('SELECT id, name, price, img_thumb_address FROM lesson_7.goods WHERE status = true')->fetchAll();
+        return Db::getInstance()->run(
+            'SELECT id, name, price, img_thumb_address FROM lesson_7.goods WHERE status = true'
+        )->fetchAll();
     }
 
     /**
@@ -72,9 +84,20 @@ class Goods
      * @param $imgThumbAddress
      * @return mixed
      */
-    public function updateGood($goodId, $name, $price, $categoryId, $status, $description, $imgAddress, $imgThumbAddress)
-    {
-        return Db::getInstance()->run('UPDATE lesson_7.goods SET name = :name, price = :price, id_category = :categoryId, status = :status, description = :description, img_address = :imgAddress, img_thumb_address = :imgThumbAddress WHERE id = :goodId', [$name, $price, $categoryId, $status, $description, $imgAddress, $imgThumbAddress, $goodId])->rowCount();
+    public function updateGood(
+        $goodId,
+        $name,
+        $price,
+        $categoryId,
+        $status,
+        $description,
+        $imgAddress,
+        $imgThumbAddress
+    ) {
+        return Db::getInstance()->run(
+            'UPDATE lesson_7.goods SET name = :name, price = :price, id_category = :categoryId, status = :status, description = :description, img_address = :imgAddress, img_thumb_address = :imgThumbAddress WHERE id = :goodId',
+            [$name, $price, $categoryId, $status, $description, $imgAddress, $imgThumbAddress, $goodId]
+        )->rowCount();
     }
 
     /**

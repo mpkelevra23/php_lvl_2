@@ -16,7 +16,10 @@ class Order
      */
     public function addOrder($userId, $createdAt, $totalPrice)
     {
-        return Db::getInstance()->run('INSERT INTO lesson_7.order (id_user, created, total_price) VALUES  (:userId, :createdAt, :totalPrice)', [$userId, $createdAt, $totalPrice]);
+        return Db::getInstance()->run(
+            'INSERT INTO lesson_7.order (id_user, created, total_price) VALUES  (:userId, :createdAt, :totalPrice)',
+            [$userId, $createdAt, $totalPrice]
+        );
     }
 
     /**
@@ -26,7 +29,10 @@ class Order
      */
     public function getOrder($orderId)
     {
-        return Db::getInstance()->run('SELECT lesson_7.order.id, lesson_7.order.id_order_status AS status_id, created, name AS status FROM lesson_7.order INNER JOIN lesson_7.order_status ON lesson_7.order.id_order_status = lesson_7.order_status.id WHERE lesson_7.order.id = :orderId', [$orderId])->fetch();
+        return Db::getInstance()->run(
+            'SELECT lesson_7.order.id, lesson_7.order.id_order_status AS status_id, created, name AS status FROM lesson_7.order INNER JOIN lesson_7.order_status ON lesson_7.order.id_order_status = lesson_7.order_status.id WHERE lesson_7.order.id = :orderId',
+            [$orderId]
+        )->fetch();
     }
 
     /**
@@ -45,7 +51,10 @@ class Order
      */
     public function getUserOrderList($userId)
     {
-        return Db::getInstance()->run('SELECT id, created, status_id, status FROM lesson_7.order_list WHERE user_id = :userId ORDER BY created DESC', [$userId])->fetchAll();
+        return Db::getInstance()->run(
+            'SELECT id, created, status_id, status FROM lesson_7.order_list WHERE user_id = :userId ORDER BY created DESC',
+            [$userId]
+        )->fetchAll();
     }
 
     /**
@@ -55,7 +64,10 @@ class Order
      */
     public function getLastUserOrders($userId)
     {
-        return Db::getInstance()->run('SELECT id, created, status_id, status FROM lesson_7.order_list WHERE user_id = :userId ORDER BY created DESC LIMIT 5', [$userId])->fetchAll();
+        return Db::getInstance()->run(
+            'SELECT id, created, status_id, status FROM lesson_7.order_list WHERE user_id = :userId ORDER BY created DESC LIMIT 5',
+            [$userId]
+        )->fetchAll();
     }
 
     /**
@@ -66,7 +78,10 @@ class Order
      */
     public function getOrderInfo($userId, $orderId)
     {
-        return Db::getInstance()->run('SELECT * FROM lesson_7.order_info WHERE user_id = :userId AND order_id = :orderId', [$userId, $orderId])->fetchAll();
+        return Db::getInstance()->run(
+            'SELECT * FROM lesson_7.order_info WHERE user_id = :userId AND order_id = :orderId',
+            [$userId, $orderId]
+        )->fetchAll();
     }
 
     /**
@@ -86,7 +101,10 @@ class Order
      */
     public function updateOrderStatus($orderId, $statusId)
     {
-        return Db::getInstance()->run('UPDATE lesson_7.order SET id_order_status = :statusId WHERE id = :orderId', [$statusId, $orderId])->rowCount();
+        return Db::getInstance()->run(
+            'UPDATE lesson_7.order SET id_order_status = :statusId WHERE id = :orderId',
+            [$statusId, $orderId]
+        )->rowCount();
     }
 
     /**
